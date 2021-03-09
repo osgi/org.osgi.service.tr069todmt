@@ -16,28 +16,9 @@
  * SPDX-License-Identifier: Apache-2.0 
  *******************************************************************************/
 
-/**
- * TR069 Connector Service Package Version 1.0.
- *
- * <p>
- * Bundles wishing to use this package must list the package in the
- * Import-Package header of the bundle's manifest. This package has two types of
- * users: the consumers that use the API in this package and the providers that
- * implement the API in this package.
- *
- * <p>
- * Example import for consumers using the API in this package:
- * <p>
- * {@code  Import-Package: org.osgi.service.tr069todmt; version="[1.0,2.0)"}
- * <p>
- * Example import for providers of the API in this package:
- * <p>
- * {@code  Import-Package: org.osgi.service.tr069todmt; version="[1.0,1.1)"}
- *
- * @author $Id$
- */
+package org.osgi.test.cases.tr069todmt.junit;
 
-@Version("1.0.1")
-package org.osgi.service.tr069todmt;
-
-import org.osgi.annotation.versioning.Version;
+public class SignatureTestCase extends
+		org.osgi.test.support.signature.SignatureTestCase {
+	// concrete subclass
+}
