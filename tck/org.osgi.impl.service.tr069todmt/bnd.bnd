@@ -1,0 +1,9 @@
+# Set javac settings from JDT prefs
+
+Bundle-Activator = ${p}.TR069ConnectorFactoryImpl
+Export-Service = org.osgi.service.tr069todmt.TR069ConnectorFactory
+Import-Service = org.osgi.service.log.LogService
+
+-privatepackage = ${p}.*
+
+p: org.osgi.impl.service.tr069todmt
