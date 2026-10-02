@@ -1,0 +1,6 @@
+org/osgi/service/tr069todmt/ParameterValue.class
+org/osgi/service/tr069todmt/TR069Connector.class
+org/osgi/service/tr069todmt/TR069Exception.class
+org/osgi/service/tr069todmt/package-info.class
+org/osgi/service/tr069todmt/ParameterInfo.class
+org/osgi/service/tr069todmt/TR069ConnectorFactory.class

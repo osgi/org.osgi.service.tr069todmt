@@ -1,0 +1,13 @@
+org/osgi/test/cases/tr069todmt/junit/TR069ConnectorSessionsTestCase.class
+org/osgi/test/cases/tr069todmt/junit/TR069ConnectorTR069IntToDmtTestCase.class
+org/osgi/test/cases/tr069todmt/junit/TR069ConnectorDmtToTR069TestCase.class
+org/osgi/test/cases/tr069todmt/plugins/MetaNode.class
+org/osgi/test/cases/tr069todmt/junit/TR069ConnectorTR069BoolToDmtTestCase.class
+org/osgi/test/cases/tr069todmt/junit/TR069ConnectorTR069LongToDmtTestCase.class
+org/osgi/test/cases/tr069todmt/plugins/Node.class
+org/osgi/test/cases/tr069todmt/plugins/TestDataPlugin.class
+org/osgi/test/cases/tr069todmt/junit/TR069ConnectorOperationsTestCase.class
+org/osgi/test/cases/tr069todmt/junit/TR069ConnectorConstantsTestCase.class
+org/osgi/test/cases/tr069todmt/junit/TR069ConnectorEscapingTestCase.class
+org/osgi/test/cases/tr069todmt/junit/SignatureTestCase.class
+org/osgi/test/cases/tr069todmt/junit/TR069ToDmtTestBase.class

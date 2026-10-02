@@ -1,0 +1,10 @@
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.impl.service.tr069todmt/src/main/java/org/osgi/impl/service/tr069todmt/MappingTable.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.impl.service.tr069todmt/src/main/java/org/osgi/impl/service/tr069todmt/Node.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.impl.service.tr069todmt/src/main/java/org/osgi/impl/service/tr069todmt/ParameterInfoImpl.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.impl.service.tr069todmt/src/main/java/org/osgi/impl/service/tr069todmt/ParameterValueImpl.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.impl.service.tr069todmt/src/main/java/org/osgi/impl/service/tr069todmt/PersistenceManager.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.impl.service.tr069todmt/src/main/java/org/osgi/impl/service/tr069todmt/TR069ConnectorFactoryImpl.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.impl.service.tr069todmt/src/main/java/org/osgi/impl/service/tr069todmt/TR069ConnectorImpl.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.impl.service.tr069todmt/src/main/java/org/osgi/impl/service/tr069todmt/Utils.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.impl.service.tr069todmt/src/main/java/org/osgi/impl/service/tr069todmt/encode/Base64.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.impl.service.tr069todmt/src/main/java/org/osgi/impl/service/tr069todmt/encode/HexBinary.java
