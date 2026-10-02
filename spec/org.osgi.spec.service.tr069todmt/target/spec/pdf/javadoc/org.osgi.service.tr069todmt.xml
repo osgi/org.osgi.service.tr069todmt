@@ -1,0 +1,1005 @@
+<section xmlns="http://docbook.org/ns/docbook"
+         xreflabel="org.osgi.service.tr069todmt"
+         version="5"
+         role="package"
+         xml:id="org.osgi.service.tr069todmt">
+   <title>org.osgi.service.tr069todmt</title>
+   <info>
+      <releaseinfo xml:id="org.osgi.service.tr069todmt-version">Version 1.0</releaseinfo>
+      <edition xml:id="org.osgi.service.tr069todmt-version.number">1.0</edition>
+   </info>
+   <para>
+TR069 Connector Service Package Version 1.0.
+
+ </para>
+   <para>
+ Bundles wishing to use this package must list the package in the
+ Import-Package header of the bundle's manifest. This package has two types of
+ users: the consumers that use the API in this package and the providers that
+ implement the API in this package.
+
+ </para>
+   <para>
+ Example import for consumers using the API in this package:
+ </para>
+   <para>
+ {@code  Import-Package: org.osgi.service.tr069todmt; version="[1.0,2.0)"}
+ </para>
+   <para>
+ Example import for providers of the API in this package:
+ </para>
+   <para>
+ {@code  Import-Package: org.osgi.service.tr069todmt; version="[1.0,1.1)"}</para>
+   <section role="summary">
+      <title>Summary</title>
+      <itemizedlist>
+         <listitem>
+            <para>
+               <link linkend="org.osgi.service.tr069todmt.ParameterInfo">
+                  <code>ParameterInfo</code>
+               </link> - 
+Maps to the TR-069 {@code ParameterInfoStruct} that is returned from the
+ {@link TR069Connector#getParameterNames(String, boolean)} method.
+   </para>
+         </listitem>
+         <listitem>
+            <para>
+               <link linkend="org.osgi.service.tr069todmt.ParameterValue">
+                  <code>ParameterValue</code>
+               </link> - 
+Maps to the TR-069 {@code ParameterValueStruct}
+   </para>
+         </listitem>
+         <listitem>
+            <para>
+               <link linkend="org.osgi.service.tr069todmt.TR069Connector">
+                  <code>TR069Connector</code>
+               </link> - 
+A TR-069 Connector is an assistant to a TR-069 Protocol Adapter developer.
+   </para>
+         </listitem>
+         <listitem>
+            <para>
+               <link linkend="org.osgi.service.tr069todmt.TR069ConnectorFactory">
+                  <code>TR069ConnectorFactory</code>
+               </link> - 
+A service that can create TR069 Connector
+   </para>
+         </listitem>
+         <listitem>
+            <para>
+               <link linkend="org.osgi.service.tr069todmt.TR069Exception">
+                  <code>TR069Exception</code>
+               </link> - 
+This exception is defined in terms of applicable TR-069 fault codes.
+   </para>
+         </listitem>
+      </itemizedlist>
+   </section>
+   <section xreflabel="ParameterInfo"
+            role="class"
+            xml:id="org.osgi.service.tr069todmt.ParameterInfo">
+      <title>public abstract ParameterInfo</title>
+      <para>
+Maps to the TR-069 {@code ParameterInfoStruct} that is returned from the
+ {@link TR069Connector#getParameterNames(String, boolean)} method.
+   </para>
+      <section xreflabel="getParameterValue()"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.ParameterInfo.getParameterValue--">
+         <title>public abstract ParameterValue getParameterValue() throws TR069Exception</title>
+         <para role="description">
+Provide the value of the node. This method throws an exception if it is
+ called for anything but a parameter
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The Parameter Value of the corresponding object</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>TR069Exception</code>– If there is a problem</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getPath()"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.ParameterInfo.getPath--">
+         <title>public abstract String getPath()</title>
+         <para role="description">
+The path of the parameter, either a parameter path, an instance path, a
+ table path, or an object path.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The name of the parameter</para>
+         </formalpara>
+      </section>
+      <section xreflabel="isParameter()"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.ParameterInfo.isParameter--">
+         <title>public abstract boolean isParameter()</title>
+         <para role="description">
+Returns {@code true} of this is a parameter, if it returns {@code false}
+ it is an object or table.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>{@code true} for a parameter, {@code false} otherwise</para>
+         </formalpara>
+      </section>
+      <section xreflabel="isWriteable()"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.ParameterInfo.isWriteable--">
+         <title>public abstract boolean isWriteable()</title>
+         <para role="description">
+Return {@code true} if this parameter is writeable, otherwise
+ {@code false}. A parameter is writeable if the SetParamaterValue with the
+ given name would be successful if an appropriate value was given. If this
+ is a table path, the method specifies whether or not AddObject would be
+ successful. If the parameter path points to a table instance, the method
+ specifies whether or not DeleteObject would be successful.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>If this parameter is writeable</para>
+         </formalpara>
+      </section>
+   </section>
+   <section xreflabel="ParameterValue"
+            role="class"
+            xml:id="org.osgi.service.tr069todmt.ParameterValue">
+      <title>public abstract ParameterValue</title>
+      <para>
+Maps to the TR-069 {@code ParameterValueStruct}
+   </para>
+      <section xreflabel="getPath()"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.ParameterValue.getPath--">
+         <title>public abstract String getPath()</title>
+         <para role="description">
+This is the path of a Parameter. In TR-069 this is called the Parameter
+ Name.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The path of the parameter</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getType()"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.ParameterValue.getType--">
+         <title>public abstract int getType()</title>
+         <para role="description">
+The type of the parameter. One of {@link TR069Connector#TR069_INT},
+ {@link TR069Connector#TR069_UNSIGNED_INT},
+ {@link TR069Connector#TR069_LONG},
+ {@link TR069Connector#TR069_UNSIGNED_LONG},
+ {@link TR069Connector#TR069_STRING},
+ {@link TR069Connector#TR069_DATETIME},
+ {@link TR069Connector#TR069_BASE64},
+ {@link TR069Connector#TR069_HEXBINARY}. This method is not part of the
+ {@code ParameterValueStruct} but is necessary to encode the type in the
+ XML.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The parameter type</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getValue()"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.ParameterValue.getValue--">
+         <title>public abstract String getValue()</title>
+         <para role="description">
+This is the value of the parameter. The returned value must be in a
+ representation defined by the TR-069 protocol.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The value of the parameter</para>
+         </formalpara>
+      </section>
+   </section>
+   <section xreflabel="TR069Connector"
+            role="class"
+            xml:id="org.osgi.service.tr069todmt.TR069Connector">
+      <title>public abstract TR069Connector</title>
+      <para>
+A TR-069 Connector is an assistant to a TR-069 Protocol Adapter developer.
+ The connector manages the low level details of converting the different
+ TR-069 RPCs to a Device Management Tree managed by Dmt Admin. The connector
+ manages the conversions from the TR-069 Object Names to a node in the DMT and
+ vice versa.
+ </para>
+      <para>
+ The connector uses a Dmt Session from the caller, which is given when the
+ connector is created. The connector does not implement the exact RPCs but
+ only provides the basic functions to set and get the parameters of an object
+ as well as adding and deleting an object in a table. A TR-069 developer must
+ still parse the XML, handle the relative and absolute path issues, open a Dmt
+ Session etc.
+ </para>
+      <para>
+ The connector assumes that each parameter or object path is relative to the
+ root of the Dmt Session.
+ </para>
+      <para>
+ This connector must convert the TR-069 paths to Dmt Admin URIs. This
+ conversion must take into account the {@code LIST} and {@code MAP} concepts
+ defined in the specifications as well as the synthetic parameters
+ {@code NumberOfEntries} and {@code Alias}. These concepts define the use of
+ an {@code InstanceId} node that must be used by the connector to provide a
+ TR-069 table view on the {@code LIST} and {@code MAP} nodes.</para>
+      <section xreflabel="PREFIX"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.PREFIX">
+         <title>public static final String PREFIX = "application/x-tr-069-"</title>
+         <para>
+The MIME type prefix.
+   </para>
+      </section>
+      <section xreflabel="TR069_BASE64"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_BASE64">
+         <title>public static final int TR069_BASE64 = 64</title>
+         <para>
+Constant representing the TR-069 base64 type.
+   </para>
+      </section>
+      <section xreflabel="TR069_BOOLEAN"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_BOOLEAN">
+         <title>public static final int TR069_BOOLEAN = 32</title>
+         <para>
+Constant representing the TR-069 boolean type.
+   </para>
+      </section>
+      <section xreflabel="TR069_DATETIME"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_DATETIME">
+         <title>public static final int TR069_DATETIME = 256</title>
+         <para>
+Constant representing the TR-069 date time type.
+   </para>
+      </section>
+      <section xreflabel="TR069_DEFAULT"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_DEFAULT">
+         <title>public static final int TR069_DEFAULT = 0</title>
+         <para>
+Constant representing the default or unknown type. If this type is used a
+ default conversion will take place
+   </para>
+      </section>
+      <section xreflabel="TR069_HEXBINARY"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_HEXBINARY">
+         <title>public static final int TR069_HEXBINARY = 128</title>
+         <para>
+Constant representing the TR-069 hex binary type.
+   </para>
+      </section>
+      <section xreflabel="TR069_INT"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_INT">
+         <title>public static final int TR069_INT = 1</title>
+         <para>
+Constant representing the TR-069 integer type.
+   </para>
+      </section>
+      <section xreflabel="TR069_LONG"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_LONG">
+         <title>public static final int TR069_LONG = 4</title>
+         <para>
+Constant representing the TR-069 long type.
+   </para>
+      </section>
+      <section xreflabel="TR069_MIME_BASE64"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_BASE64">
+         <title>public static final String TR069_MIME_BASE64 = "application/x-tr-069-base64"</title>
+         <para>
+Constant representing the TR-069 base64 type.
+   </para>
+      </section>
+      <section xreflabel="TR069_MIME_BOOLEAN"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_BOOLEAN">
+         <title>public static final String TR069_MIME_BOOLEAN = "application/x-tr-069-boolean"</title>
+         <para>
+Constant representing the TR-069 boolean type.
+   </para>
+      </section>
+      <section xreflabel="TR069_MIME_DATETIME"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_DATETIME">
+         <title>public static final String TR069_MIME_DATETIME = "application/x-tr-069-dateTime"</title>
+         <para>
+Constant representing the TR-069 date time type.
+   </para>
+      </section>
+      <section xreflabel="TR069_MIME_DEFAULT"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_DEFAULT">
+         <title>public static final String TR069_MIME_DEFAULT = "application/x-tr-069-default"</title>
+         <para>
+Constant representing the default or unknown type. If this type is used a
+ default conversion will take place
+   </para>
+      </section>
+      <section xreflabel="TR069_MIME_EAGER"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_EAGER">
+         <title>public static final String TR069_MIME_EAGER = "application/x-tr-069-eager"</title>
+         <para>
+Constant representing the TR-069 eager type.
+   </para>
+      </section>
+      <section xreflabel="TR069_MIME_HEXBINARY"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_HEXBINARY">
+         <title>public static final String TR069_MIME_HEXBINARY = "application/x-tr-069-hexBinary"</title>
+         <para>
+Constant representing the TR-069 hex binary type.
+   </para>
+      </section>
+      <section xreflabel="TR069_MIME_INT"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_INT">
+         <title>public static final String TR069_MIME_INT = "application/x-tr-069-int"</title>
+         <para>
+Constant representing the TR-069 integer type.
+   </para>
+      </section>
+      <section xreflabel="TR069_MIME_LONG"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_LONG">
+         <title>public static final String TR069_MIME_LONG = "application/x-tr-069-long"</title>
+         <para>
+Constant representing the TR-069 long type.
+   </para>
+      </section>
+      <section xreflabel="TR069_MIME_STRING"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_STRING">
+         <title>public static final String TR069_MIME_STRING = "application/x-tr-069-string"</title>
+         <para>
+Constant representing the TR-069 string type.
+   </para>
+      </section>
+      <section xreflabel="TR069_MIME_STRING_LIST"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_STRING_LIST">
+         <title>public static final String TR069_MIME_STRING_LIST = "application/x-tr-069-string-list"</title>
+         <para>
+Constant representing the TR-069 string list type.
+   </para>
+      </section>
+      <section xreflabel="TR069_MIME_UNSIGNED_INT"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_UNSIGNED_INT">
+         <title>public static final String TR069_MIME_UNSIGNED_INT = "application/x-tr-069-unsignedInt"</title>
+         <para>
+Constant representing the TR-069 unsigned integer type.
+   </para>
+      </section>
+      <section xreflabel="TR069_MIME_UNSIGNED_LONG"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_UNSIGNED_LONG">
+         <title>public static final String TR069_MIME_UNSIGNED_LONG = "application/x-tr-069-unsignedLong"</title>
+         <para>
+Constant representing the TR-069 unsigned long type.
+   </para>
+      </section>
+      <section xreflabel="TR069_STRING"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_STRING">
+         <title>public static final int TR069_STRING = 16</title>
+         <para>
+Constant representing the TR-069 string type.
+   </para>
+      </section>
+      <section xreflabel="TR069_UNSIGNED_INT"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_UNSIGNED_INT">
+         <title>public static final int TR069_UNSIGNED_INT = 2</title>
+         <para>
+Constant representing the TR-069 unsigned integer type.
+   </para>
+      </section>
+      <section xreflabel="TR069_UNSIGNED_LONG"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.TR069_UNSIGNED_LONG">
+         <title>public static final int TR069_UNSIGNED_LONG = 8</title>
+         <para>
+Constant representing the TR-069 unsigned long type.
+   </para>
+      </section>
+      <section xreflabel="addObject(String)"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.addObject-String-">
+         <title>public abstract String addObject(String path) throws TR069Exception</title>
+         <formalpara role="parameter">
+            <title>path</title>
+            <para>A table path with an optional alias at the end</para>
+         </formalpara>
+         <para role="description">
+Add a new node to the Dmt Admin as defined by the AddObject RPC.
+ 
+ The path must map to either a {@code LIST} or {@code MAP} node as no
+ other nodes can accept new children.
+ </para>
+         <para>
+ If the path ends in an alias ({@code [ ALIAS ]}) then the node name must
+ be the alias, however, no new node must be created. Otherwise, the
+ Connector must calculate a unique instance id for the new node name that
+ follows the TR-069 rules for instance ids. That is, this id must not be
+ reused and must not be in use. That is, the id must be reserved
+ persistently.
+ 
+ </para>
+         <para>
+ If the {@code LIST} or {@code MAP} node has a Meta Node with a MIME type
+ application/x-tr-069-eager then the node must be immediately created.
+ Otherwise no new node must be created, this node must be created when the
+ node is accessed in a subsequent RPC.
+ </para>
+         <para>
+ The alias name or instance id must be returned as identifier for the ACS.</para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The name of the new node.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>TR069Exception</code>– The following fault codes are defined for this
+         method: 9001, 9002, 9003, 9004, 9005. If an AddObject request
+         would result in exceeding the maximum number of such objects
+         supported by the CPE, the CPE MUST return a fault response with
+         the Resources Exceeded (9004) fault code.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="close()"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.close--">
+         <title>public abstract void close()</title>
+         <para role="description">
+Close this connector. This will <emphasis role="strong">not</emphasis> close the corresponding
+ session.
+   </para>
+      </section>
+      <section xreflabel="deleteObject(String)"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.deleteObject-String-">
+         <title>public abstract void deleteObject(String objectPath) throws TR069Exception</title>
+         <formalpara role="parameter">
+            <title>objectPath</title>
+            <para>The path to an object in a table to be deleted.</para>
+         </formalpara>
+         <para role="description">
+Delete an object from a table. A missing node must be ignored.
+   </para>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>TR069Exception</code>– The following fault codes are defined for this
+         method: 9001, 9002, 9003, 9005. If the fault is caused by an
+         invalid objectPath value, the Invalid Parameter Name fault code
+         (9005) must be used instead of the more general Invalid Arguments
+         fault code (9003). A missing node for {@code objectPath} must be
+         ignored.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getParameterNames(String,boolean)"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.getParameterNames-String-boolean-">
+         <title>public abstract Collection&lt;ParameterInfo&gt; getParameterNames(String objectOrTablePath, boolean nextLevel) throws TR069Exception</title>
+         <formalpara role="parameter">
+            <title>objectOrTablePath</title>
+            <para>A path to an object or table.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>nextLevel</title>
+            <para>If {@code true} consider only the children of the object
+        or table addressed by {@code path}, otherwise include the whole
+        sub-tree, including the addressed object or table.</para>
+         </formalpara>
+         <para role="description">
+Getting the {@link ParameterInfo} objects addressed by path. This method
+ is intended to be used to implement the GetParameterNames RPC.
+ </para>
+         <para>
+ The connector must attempt to create any missing nodes that are needed
+ for the {@code objectOrTablePath} by using the
+ {@link #toURI(String, boolean)} method with {@code true}.
+ </para>
+         <para>
+ This method must traverse the sub-tree addressed by the path and return
+ the paths to all the objects, tables, and parameters in that tree. If the
+ nextLevel argument is {@code true} then only the children object, table,
+ and parameter information must be returned.
+ </para>
+         <para>
+ The returned {@link ParameterInfo} objects must be usable to discover the
+ sub-tree.
+ </para>
+         <para>
+ If the child nodes have an {@code InstanceId} node then the returned
+ names must include the {@code InstanceId} values instead of the node
+ names.
+ </para>
+         <para>
+ If the parent node is a {@code MAP}, then the synthetic {@code Alias}
+ parameter must be included.
+ </para>
+         <para>
+ Any {@code MAP} and {@code LIST} node must include a
+ {@link ParameterInfo} for the corresponding {@code NumberOfEntries}
+ parameter.</para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>A collection of {@link ParameterInfo} objects representing the
+         resulting child parameter, objects, and tables as defined by the
+         TR-069 {@code ParameterInfoStruct}.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>TR069Exception</code>– If the fault is caused by an invalid ParameterPath
+         value, the Invalid Parameter Name fault code (9005) MUST be used
+         instead of the more general Invalid Arguments fault code (9003).
+         A ParameterPath value must be considered invalid if it is not an
+         empty string and does not exactly match a parameter or object
+         name currently present in the data model. If {@code nextLevel} is
+         {@code true} and {@code objectOrTablePath} is a parameter path
+         rather than an object/table path, the method must return a fault
+         response with the Invalid Arguments fault code (9003). If the
+         value cannot be gotten for some reason, this method can generate
+         the following fault codes::
+         <itemizedlist>
+                  <listitem>
+                     <para> 9001 {@link TR069Exception#REQUEST_DENIED} </para>
+                  </listitem>
+                  <listitem>
+                     <para> 9002
+         {@link TR069Exception#INTERNAL_ERROR} </para>
+                  </listitem>
+                  <listitem>
+                     <para> 9003
+         {@link TR069Exception#INVALID_ARGUMENTS} </para>
+                  </listitem>
+                  <listitem>
+                     <para> 9005
+         {@link TR069Exception#INVALID_PARAMETER_NAME}</para>
+                  </listitem>
+               </itemizedlist>
+            </para>
+         </formalpara>
+      </section>
+      <section xreflabel="getParameterValue(String)"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.getParameterValue-String-">
+         <title>public abstract ParameterValue getParameterValue(String parameterPath) throws TR069Exception</title>
+         <formalpara role="parameter">
+            <title>parameterPath</title>
+            <para>A parameter path (must refer to a valid parameter,
+        not an object or table).</para>
+         </formalpara>
+         <para role="description">
+Getting a parameter value. This method should be used to implement the
+ GetParameterValues RPC. This method does <emphasis role="strong">not</emphasis> handle retrieving
+ multiple values as the corresponding RPC can request with an object or
+ table path, this method only accepts a parameter path. Retrieving
+ multiple values can be achieved with the
+ {@link #getParameterNames(String, boolean)}.
+ </para>
+         <para>
+ If the {@code parameterPath} ends in {@code NumberOfEntries} then the
+ method must synthesize the value. The {@code parameterPath} then has a
+ pattern like {@code (object-path)(table-name)NumberOfEntries}. The
+ returned value must be an {@link #TR069_UNSIGNED_INT} that contains the
+ number of child nodes in the table {@code (object-path)(table-name)}. For
+ example, if {@code A.B.CNumberOfEntries} is requested the return value
+ must be the number of child nodes under {@code A/B/C}.
+ </para>
+         <para>
+ If the value of a an {@code Alias} node is requested then the name of the
+ parent node must be returned. For example, if the path is
+ {@code M.X.Alias} then the returned value must be {@code X}.
+ </para>
+         <para>
+ The connector must attempt to create any missing nodes along the way,
+ creating parent nodes on demand.</para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The name, value, and type triad of the requested parameter as
+         defined by the TR-069 {@code ParameterValueStruct}.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>TR069Exception</code>– The following fault codes are defined for this
+         method: 9001, 9002, 9003, 9004, 9005.
+         <itemizedlist>
+                  <listitem>
+                     <para> 9001 {@link TR069Exception#REQUEST_DENIED}</para>
+                  </listitem>
+                  <listitem>
+                     <para> 9002
+         {@link TR069Exception#INTERNAL_ERROR}</para>
+                  </listitem>
+                  <listitem>
+                     <para> 9003
+         {@link TR069Exception#INVALID_ARGUMENTS}</para>
+                  </listitem>
+                  <listitem>
+                     <para> 9004
+         {@link TR069Exception#RESOURCES_EXCEEDED}</para>
+                  </listitem>
+                  <listitem>
+                     <para> 9005
+         {@link TR069Exception#INVALID_PARAMETER_NAME}</para>
+                  </listitem>
+               </itemizedlist>
+            </para>
+         </formalpara>
+      </section>
+      <section xreflabel="setParameterValue(String,String,int)"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.setParameterValue-String-String-int-">
+         <title>public abstract void setParameterValue(String parameterPath, String value, int type) throws TR069Exception</title>
+         <formalpara role="parameter">
+            <title>parameterPath</title>
+            <para>The parameter path</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>value</title>
+            <para>A trimmed string value that has the given type. The value
+        can be in either canonical or lexical representation by TR069.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>type</title>
+            <para>The type of the parameter ({@link #TR069_INT},
+        {@link #TR069_UNSIGNED_INT},{@link #TR069_LONG},
+        {@link #TR069_UNSIGNED_LONG},{@link #TR069_STRING},
+        {@link #TR069_DATETIME},{@link #TR069_BASE64},
+        {@link #TR069_HEXBINARY}, {@link #TR069_BOOLEAN})</para>
+         </formalpara>
+         <para role="description">
+Setting a parameter. This method should be used to provide the
+ SetParameterValues RPC. This method must convert the parameter Name to a
+ URI and replace the DMT node at that place. It must follow the type
+ conversions as described in the specification.
+ </para>
+         <para>
+ The connector must attempt to create any missing nodes along the way,
+ creating parent nodes on demand.
+ </para>
+         <para>
+ If the value of a an Alias node is set then the parent node must be
+ renamed. For example, if the value of {@code M/X/Alias} is set to
+ {@code Y} then the node will have a URI of {@code M/Y/Alias}. The value
+ must not be escaped as the connector will escape it.</para>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>TR069Exception</code>– The following fault codes are defined for this
+         method: 9001, 9002, 9003, 9004, 9005, 9006, 9007, 9008.
+         <itemizedlist>
+                  <listitem>
+                     <para> 9001 {@link TR069Exception#REQUEST_DENIED} </para>
+                  </listitem>
+                  <listitem>
+                     <para> 9002
+         {@link TR069Exception#INTERNAL_ERROR} </para>
+                  </listitem>
+                  <listitem>
+                     <para> 9003
+         {@link TR069Exception#INVALID_ARGUMENTS} </para>
+                  </listitem>
+                  <listitem>
+                     <para> 9004
+         {@link TR069Exception#RESOURCES_EXCEEDED} </para>
+                  </listitem>
+                  <listitem>
+                     <para> 9005
+         {@link TR069Exception#INVALID_PARAMETER_NAME} </para>
+                  </listitem>
+                  <listitem>
+                     <para> 9006
+         {@link TR069Exception#INVALID_PARAMETER_TYPE} </para>
+                  </listitem>
+                  <listitem>
+                     <para> 9007
+         {@link TR069Exception#INVALID_PARAMETER_VALUE} </para>
+                  </listitem>
+                  <listitem>
+                     <para> 9008
+         {@link TR069Exception#NON_WRITABLE_PARAMETER}</para>
+                  </listitem>
+               </itemizedlist>
+            </para>
+         </formalpara>
+      </section>
+      <section xreflabel="toPath(String)"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.toPath-String-">
+         <title>public abstract String toPath(String uri) throws TR069Exception</title>
+         <formalpara role="parameter">
+            <title>uri</title>
+            <para>A Dmt Session relative URI</para>
+         </formalpara>
+         <para role="description">
+Convert a Dmt Session relative Dmt Admin URI to a valid TR-069 path,
+ either a table, object, or parameter path depending on the structure of
+ the DMT. The translation takes into account the special meaning
+ {@code LIST}, {@code MAP} , {@code Alias}, and {@code InstanceId} nodes.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>An object, table, or parameter path</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>TR069Exception</code>– If there is an error</para>
+         </formalpara>
+      </section>
+      <section xreflabel="toURI(String,boolean)"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.TR069Connector.toURI-String-boolean-">
+         <title>public abstract String toURI(String name, boolean create) throws TR069Exception</title>
+         <formalpara role="parameter">
+            <title>name</title>
+            <para>A TR-069 path</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>create</title>
+            <para>If {@code true}, create missing nodes when they reside
+        under a MAP or LIST</para>
+         </formalpara>
+         <para role="description">
+Convert a TR-069 path to a Dmt Session relative Dmt Admin URI. The
+ translation takes into account the special meaning {@code LIST},
+ {@code MAP}, {@code InstanceId} node semantics.
+ </para>
+         <para>
+ The synthetic {@code Alias} or {@code NumberOfEntries} parameter cannot
+ be mapped and must throw an {@link TR069Exception#INVALID_PARAMETER_NAME}.
+ </para>
+         <para>
+ The returned path is properly escaped for TR-069.
+ </para>
+         <para>
+ The mapping from the path to a URI requires support from the meta data in
+ the DMT, it is not possible to use a mapping solely based on string
+ replacements. The translation takes into account the semantics of the MAP
+ and LIST nodes. If at a certain point a node under a {@code MAP} node
+ does not exist then the Connector can create it if the {@code create}
+ flag is set to {@code true}. Otherwise a non-existent node will terminate
+ the mapping.</para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>A relative Dmt Admin URI</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>TR069Exception</code>– If there is an error</para>
+         </formalpara>
+      </section>
+   </section>
+   <section xreflabel="TR069ConnectorFactory"
+            role="class"
+            xml:id="org.osgi.service.tr069todmt.TR069ConnectorFactory">
+      <title>public abstract TR069ConnectorFactory</title>
+      <para>
+A service that can create TR069 Connector
+   </para>
+      <section xreflabel="create(DmtSession)"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.TR069ConnectorFactory.create-DmtSession-">
+         <title>public abstract TR069Connector create(DmtSession session)</title>
+         <formalpara role="parameter">
+            <title>session</title>
+            <para>The session to use for the adaption. This session must not
+        be closed before the TR069 Connector is closed.</para>
+         </formalpara>
+         <para role="description">
+Create a TR069 connector based on the given session .
+ </para>
+         <para>
+ The session must be an atomic session when objects are added and/or
+ parameters are going to be set, otherwise it can be a read only or
+ exclusive session. Due to the lazy creation nature of the TR069 Connector
+ it is possible that a node must be created in a read method after a node
+ has been added, it is therefore necessary to always provide an atomic
+ session when an ACS session requires modifying parameters.</para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>A new TR069 Connector bound to the given session</para>
+         </formalpara>
+      </section>
+   </section>
+   <section xreflabel="TR069Exception"
+            role="class"
+            xml:id="org.osgi.service.tr069todmt.TR069Exception">
+      <title>public class TR069Exception<?line-break?> extends RuntimeException</title>
+      <para>
+This exception is defined in terms of applicable TR-069 fault codes. The
+ TR-069 specification defines the fault codes that can occur in different
+ situations.
+   </para>
+      <section xreflabel="INTERNAL_ERROR"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.INTERNAL_ERROR">
+         <title>public static final int INTERNAL_ERROR = 9002</title>
+         <para>
+9002 Internal error
+   </para>
+      </section>
+      <section xreflabel="INVALID_ARGUMENTS"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.INVALID_ARGUMENTS">
+         <title>public static final int INVALID_ARGUMENTS = 9003</title>
+         <para>
+9003 Invalid Arguments
+   </para>
+      </section>
+      <section xreflabel="INVALID_PARAMETER_NAME"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.INVALID_PARAMETER_NAME">
+         <title>public static final int INVALID_PARAMETER_NAME = 9005</title>
+         <para>
+9005 Invalid parameter name (associated with Set/GetParameterValues,
+ GetParameterNames, Set/GetParameterAttributes, AddObject, and
+ DeleteObject)
+   </para>
+      </section>
+      <section xreflabel="INVALID_PARAMETER_TYPE"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.INVALID_PARAMETER_TYPE">
+         <title>public static final int INVALID_PARAMETER_TYPE = 9006</title>
+         <para>
+9006 Invalid parameter type (associated with SetParameterValues)
+   </para>
+      </section>
+      <section xreflabel="INVALID_PARAMETER_VALUE"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.INVALID_PARAMETER_VALUE">
+         <title>public static final int INVALID_PARAMETER_VALUE = 9007</title>
+         <para>
+9007 Invalid parameter value (associated with SetParameterValues)
+   </para>
+      </section>
+      <section xreflabel="METHOD_NOT_SUPPORTED"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.METHOD_NOT_SUPPORTED">
+         <title>public static final int METHOD_NOT_SUPPORTED = 9000</title>
+         <para>
+9000 Method not supported
+   </para>
+      </section>
+      <section xreflabel="NON_WRITABLE_PARAMETER"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.NON_WRITABLE_PARAMETER">
+         <title>public static final int NON_WRITABLE_PARAMETER = 9008</title>
+         <para>
+9008 Attempt to set a non-writable parameter (associated with
+ SetParameterValues)
+   </para>
+      </section>
+      <section xreflabel="NOTIFICATION_REJECTED"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.NOTIFICATION_REJECTED">
+         <title>public static final int NOTIFICATION_REJECTED = 9009</title>
+         <para>
+9009 Notification request rejected (associated with
+ SetParameterAttributes method).
+   </para>
+      </section>
+      <section xreflabel="REQUEST_DENIED"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.REQUEST_DENIED">
+         <title>public static final int REQUEST_DENIED = 9001</title>
+         <para>
+9001 Request denied (no reason specified
+   </para>
+      </section>
+      <section xreflabel="RESOURCES_EXCEEDED"
+               role="field"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.RESOURCES_EXCEEDED">
+         <title>public static final int RESOURCES_EXCEEDED = 9004</title>
+         <para>
+9004 Resources exceeded (when used in association with
+ SetParameterValues, this MUST NOT be used to indicate parameters in
+ error)
+   </para>
+      </section>
+      <section xreflabel="TR069Exception(String)"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.TR069Exception-String-">
+         <title>public  TR069Exception(String message)</title>
+         <formalpara role="parameter">
+            <title>message</title>
+            <para>The message</para>
+         </formalpara>
+         <para role="description">
+A default constructor when only a message is known. This will generate a
+ {@link #INTERNAL_ERROR} fault.
+   </para>
+      </section>
+      <section xreflabel="TR069Exception(String,int,DmtException)"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.TR069Exception-String-int-DmtException-">
+         <title>public  TR069Exception(String message, int faultCode, DmtException e)</title>
+         <formalpara role="parameter">
+            <title>message</title>
+            <para>The message</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>faultCode</title>
+            <para>The TR-069 defined fault code</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>e</title>
+            <para/>
+         </formalpara>
+         <para role="description">
+A Constructor with a message and a fault code.
+   </para>
+      </section>
+      <section xreflabel="TR069Exception(String,int)"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.TR069Exception-String-int-">
+         <title>public  TR069Exception(String message, int faultCode)</title>
+         <formalpara role="parameter">
+            <title>message</title>
+            <para>The message</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>faultCode</title>
+            <para>The TR-069 defined fault code</para>
+         </formalpara>
+         <para role="description">
+A Constructor with a message and a fault code.
+   </para>
+      </section>
+      <section xreflabel="TR069Exception(DmtException)"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.TR069Exception-DmtException-">
+         <title>public  TR069Exception(DmtException e)</title>
+         <formalpara role="parameter">
+            <title>e</title>
+            <para>The Dmt Exception</para>
+         </formalpara>
+         <para role="description">
+Create a TR069Exception from a Dmt Exception.
+   </para>
+      </section>
+      <section xreflabel="getDmtException()"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.getDmtException--">
+         <title>public DmtException getDmtException()</title>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>the corresponding Dmt Exception</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getFaultCode()"
+               role="method"
+               xml:id="org.osgi.service.tr069todmt.TR069Exception.getFaultCode--">
+         <title>public int getFaultCode()</title>
+         <para role="description">
+Answer the associated TR-069 fault code.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>Answer the associated TR-069 fault code.</para>
+         </formalpara>
+      </section>
+   </section>
+</section>

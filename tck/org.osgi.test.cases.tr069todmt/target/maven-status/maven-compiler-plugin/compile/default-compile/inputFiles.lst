@@ -1,0 +1,13 @@
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.test.cases.tr069todmt/src/main/java/org/osgi/test/cases/tr069todmt/junit/SignatureTestCase.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.test.cases.tr069todmt/src/main/java/org/osgi/test/cases/tr069todmt/junit/TR069ConnectorConstantsTestCase.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.test.cases.tr069todmt/src/main/java/org/osgi/test/cases/tr069todmt/junit/TR069ConnectorDmtToTR069TestCase.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.test.cases.tr069todmt/src/main/java/org/osgi/test/cases/tr069todmt/junit/TR069ConnectorEscapingTestCase.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.test.cases.tr069todmt/src/main/java/org/osgi/test/cases/tr069todmt/junit/TR069ConnectorOperationsTestCase.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.test.cases.tr069todmt/src/main/java/org/osgi/test/cases/tr069todmt/junit/TR069ConnectorSessionsTestCase.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.test.cases.tr069todmt/src/main/java/org/osgi/test/cases/tr069todmt/junit/TR069ConnectorTR069BoolToDmtTestCase.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.test.cases.tr069todmt/src/main/java/org/osgi/test/cases/tr069todmt/junit/TR069ConnectorTR069IntToDmtTestCase.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.test.cases.tr069todmt/src/main/java/org/osgi/test/cases/tr069todmt/junit/TR069ConnectorTR069LongToDmtTestCase.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.test.cases.tr069todmt/src/main/java/org/osgi/test/cases/tr069todmt/junit/TR069ToDmtTestBase.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.test.cases.tr069todmt/src/main/java/org/osgi/test/cases/tr069todmt/plugins/MetaNode.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.test.cases.tr069todmt/src/main/java/org/osgi/test/cases/tr069todmt/plugins/Node.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.tr069todmt/tck/org.osgi.test.cases.tr069todmt/src/main/java/org/osgi/test/cases/tr069todmt/plugins/TestDataPlugin.java

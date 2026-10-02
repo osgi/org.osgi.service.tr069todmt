@@ -1,0 +1,942 @@
+<?xml version='1.0' encoding='utf-8'?>
+<top>
+  <package name='org.osgi.service.tr069todmt' fqn='org.osgi.service.tr069todmt' qn='org.osgi.service.tr069todmt'>
+<org.osgi.annotation.versioning.Version><value>1.0</value>
+</org.osgi.annotation.versioning.Version>
+   <lead>
+TR069 Connector Service Package Version 1.0.
+   </lead>
+   <description>
+TR069 Connector Service Package Version 1.0.
+
+ <p>
+ Bundles wishing to use this package must list the package in the
+ Import-Package header of the bundle's manifest. This package has two types of
+ users: the consumers that use the API in this package and the providers that
+ implement the API in this package.
+
+ </p><p>
+ Example import for consumers using the API in this package:
+ </p><p>
+ {@code  Import-Package: org.osgi.service.tr069todmt; version="[1.0,2.0)"}
+ </p><p>
+ Example import for providers of the API in this package:
+ </p><p>
+ {@code  Import-Package: org.osgi.service.tr069todmt; version="[1.0,1.1)"}</p>
+   </description>
+<author>@author $Id: f4a574f13c59dd0586255e6ef768992eb15dfc39 $</author>
+  <class name='ParameterInfo' fqn='org.osgi.service.tr069todmt.ParameterInfo' qn='ParameterInfo' package='org.osgi.service.tr069todmt' typeParam='' modifiers='public abstract' interface='yes' kind='INTERFACE'>
+   <lead>
+Maps to the TR-069 {@code ParameterInfoStruct} that is returned from the
+ {@link TR069Connector#getParameterNames(String, boolean)} method.
+   </lead>
+   <description>
+Maps to the TR-069 {@code ParameterInfoStruct} that is returned from the
+ {@link TR069Connector#getParameterNames(String, boolean)} method.
+   </description>
+
+    <method name='getPath' fqn='org.osgi.service.tr069todmt.ParameterInfo.getPath' qn='ParameterInfo.getPath()' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+The path of the parameter, either a parameter path, an instance path, a
+ table path, or an object path.
+   </lead>
+   <description>
+The path of the parameter, either a parameter path, an instance path, a
+ table path, or an object path.
+   </description>
+
+
+<return>The name of the parameter</return>
+
+
+
+     </method>
+    <method name='isWriteable' fqn='org.osgi.service.tr069todmt.ParameterInfo.isWriteable' qn='ParameterInfo.isWriteable()' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='boolean' qualifiedTypeName='boolean' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Return {@code true} if this parameter is writeable, otherwise
+ {@code false}.
+   </lead>
+   <description>
+Return {@code true} if this parameter is writeable, otherwise
+ {@code false}. A parameter is writeable if the SetParamaterValue with the
+ given name would be successful if an appropriate value was given. If this
+ is a table path, the method specifies whether or not AddObject would be
+ successful. If the parameter path points to a table instance, the method
+ specifies whether or not DeleteObject would be successful.
+   </description>
+
+
+<return>If this parameter is writeable</return>
+
+
+
+     </method>
+    <method name='isParameter' fqn='org.osgi.service.tr069todmt.ParameterInfo.isParameter' qn='ParameterInfo.isParameter()' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='boolean' qualifiedTypeName='boolean' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns {@code true} of this is a parameter, if it returns {@code false}
+ it is an object or table.
+   </lead>
+   <description>
+Returns {@code true} of this is a parameter, if it returns {@code false}
+ it is an object or table.
+   </description>
+
+
+<return>{@code true} for a parameter, {@code false} otherwise</return>
+
+
+
+     </method>
+    <method name='getParameterValue' fqn='org.osgi.service.tr069todmt.ParameterInfo.getParameterValue' qn='ParameterInfo.getParameterValue()' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='ParameterValue' qualifiedTypeName='org.osgi.service.tr069todmt.ParameterValue' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Provide the value of the node.
+   </lead>
+   <description>
+Provide the value of the node. This method throws an exception if it is
+ called for anything but a parameter
+   </description>
+
+
+<return>The Parameter Value of the corresponding object</return>
+
+<throws name='TR069Exception'>If there is a problem</throws>
+
+
+<exception name='TR069Exception' fqn='org.osgi.service.tr069todmt.TR069Exception'/>
+     </method>
+  </class>
+  <class name='ParameterValue' fqn='org.osgi.service.tr069todmt.ParameterValue' qn='ParameterValue' package='org.osgi.service.tr069todmt' typeParam='' modifiers='public abstract' interface='yes' kind='INTERFACE'>
+   <lead>
+Maps to the TR-069 {@code ParameterValueStruct}
+   </lead>
+   <description>
+Maps to the TR-069 {@code ParameterValueStruct}
+   </description>
+
+    <method name='getPath' fqn='org.osgi.service.tr069todmt.ParameterValue.getPath' qn='ParameterValue.getPath()' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+This is the path of a Parameter.
+   </lead>
+   <description>
+This is the path of a Parameter. In TR-069 this is called the Parameter
+ Name.
+   </description>
+
+
+<return>The path of the parameter</return>
+
+
+
+     </method>
+    <method name='getValue' fqn='org.osgi.service.tr069todmt.ParameterValue.getValue' qn='ParameterValue.getValue()' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+This is the value of the parameter.
+   </lead>
+   <description>
+This is the value of the parameter. The returned value must be in a
+ representation defined by the TR-069 protocol.
+   </description>
+
+
+<return>The value of the parameter</return>
+
+
+
+     </method>
+    <method name='getType' fqn='org.osgi.service.tr069todmt.ParameterValue.getType' qn='ParameterValue.getType()' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='int' qualifiedTypeName='int' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+The type of the parameter.
+   </lead>
+   <description>
+The type of the parameter. One of {@link TR069Connector#TR069_INT},
+ {@link TR069Connector#TR069_UNSIGNED_INT},
+ {@link TR069Connector#TR069_LONG},
+ {@link TR069Connector#TR069_UNSIGNED_LONG},
+ {@link TR069Connector#TR069_STRING},
+ {@link TR069Connector#TR069_DATETIME},
+ {@link TR069Connector#TR069_BASE64},
+ {@link TR069Connector#TR069_HEXBINARY}. This method is not part of the
+ {@code ParameterValueStruct} but is necessary to encode the type in the
+ XML.
+   </description>
+
+
+<return>The parameter type</return>
+
+
+
+     </method>
+  </class>
+  <class name='TR069Connector' fqn='org.osgi.service.tr069todmt.TR069Connector' qn='TR069Connector' package='org.osgi.service.tr069todmt' typeParam='' modifiers='public abstract' interface='yes' kind='INTERFACE'>
+   <lead>
+A TR-069 Connector is an assistant to a TR-069 Protocol Adapter developer.
+   </lead>
+   <description>
+A TR-069 Connector is an assistant to a TR-069 Protocol Adapter developer.
+ The connector manages the low level details of converting the different
+ TR-069 RPCs to a Device Management Tree managed by Dmt Admin. The connector
+ manages the conversions from the TR-069 Object Names to a node in the DMT and
+ vice versa.
+ <p>
+ The connector uses a Dmt Session from the caller, which is given when the
+ connector is created. The connector does not implement the exact RPCs but
+ only provides the basic functions to set and get the parameters of an object
+ as well as adding and deleting an object in a table. A TR-069 developer must
+ still parse the XML, handle the relative and absolute path issues, open a Dmt
+ Session etc.
+ </p><p>
+ The connector assumes that each parameter or object path is relative to the
+ root of the Dmt Session.
+ </p><p>
+ This connector must convert the TR-069 paths to Dmt Admin URIs. This
+ conversion must take into account the {@code LIST} and {@code MAP} concepts
+ defined in the specifications as well as the synthetic parameters
+ {@code NumberOfEntries} and {@code Alias}. These concepts define the use of
+ an {@code InstanceId} node that must be used by the connector to provide a
+ TR-069 table view on the {@code LIST} and {@code MAP} nodes.</p>
+   </description>
+
+    <method name='setParameterValue' fqn='org.osgi.service.tr069todmt.TR069Connector.setParameterValue' qn='TR069Connector.setParameterValue(String,String,int)' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='void' qualifiedTypeName='void' typeArgs='' dimension='' signature='(java.lang.String,java.lang.String,int)' flatSignature='(String,String,int)'>
+   <lead>
+Setting a parameter.
+   </lead>
+   <description>
+Setting a parameter. This method should be used to provide the
+ SetParameterValues RPC. This method must convert the parameter Name to a
+ URI and replace the DMT node at that place. It must follow the type
+ conversions as described in the specification.
+ <p>
+ The connector must attempt to create any missing nodes along the way,
+ creating parent nodes on demand.
+ </p><p>
+ If the value of a an Alias node is set then the parent node must be
+ renamed. For example, if the value of {@code M/X/Alias} is set to
+ {@code Y} then the node will have a URI of {@code M/Y/Alias}. The value
+ must not be escaped as the connector will escape it.</p>
+   </description>
+
+<param name='parameterPath'>The parameter path</param>
+<param name='value'>A trimmed string value that has the given type. The value
+        can be in either canonical or lexical representation by TR069.</param>
+<param name='type'>The type of the parameter ({@link #TR069_INT},
+        {@link #TR069_UNSIGNED_INT},{@link #TR069_LONG},
+        {@link #TR069_UNSIGNED_LONG},{@link #TR069_STRING},
+        {@link #TR069_DATETIME},{@link #TR069_BASE64},
+        {@link #TR069_HEXBINARY}, {@link #TR069_BOOLEAN})</param>
+
+
+<throws name='TR069Exception'>The following fault codes are defined for this
+         method: 9001, 9002, 9003, 9004, 9005, 9006, 9007, 9008.
+         <ul>
+         <li> 9001 {@link TR069Exception#REQUEST_DENIED} </li> <li> 9002
+         {@link TR069Exception#INTERNAL_ERROR} </li><li> 9003
+         {@link TR069Exception#INVALID_ARGUMENTS} </li><li> 9004
+         {@link TR069Exception#RESOURCES_EXCEEDED} </li><li> 9005
+         {@link TR069Exception#INVALID_PARAMETER_NAME} </li><li> 9006
+         {@link TR069Exception#INVALID_PARAMETER_TYPE} </li><li> 9007
+         {@link TR069Exception#INVALID_PARAMETER_VALUE} </li><li> 9008
+         {@link TR069Exception#NON_WRITABLE_PARAMETER}</li>
+         </ul></throws>
+
+
+    <parameter name='parameterPath' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+    <parameter name='value' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+    <parameter name='type' dimension='' typeName='int' fqn='int' varargs='false'/>
+<exception name='TR069Exception' fqn='org.osgi.service.tr069todmt.TR069Exception'/>
+     </method>
+    <method name='getParameterValue' fqn='org.osgi.service.tr069todmt.TR069Connector.getParameterValue' qn='TR069Connector.getParameterValue(String)' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='ParameterValue' qualifiedTypeName='org.osgi.service.tr069todmt.ParameterValue' typeArgs='' dimension='' signature='(java.lang.String)' flatSignature='(String)'>
+   <lead>
+Getting a parameter value.
+   </lead>
+   <description>
+Getting a parameter value. This method should be used to implement the
+ GetParameterValues RPC. This method does <b>not</b> handle retrieving
+ multiple values as the corresponding RPC can request with an object or
+ table path, this method only accepts a parameter path. Retrieving
+ multiple values can be achieved with the
+ {@link #getParameterNames(String, boolean)}.
+ <p>
+ If the {@code parameterPath} ends in {@code NumberOfEntries} then the
+ method must synthesize the value. The {@code parameterPath} then has a
+ pattern like {@code (object-path)(table-name)NumberOfEntries}. The
+ returned value must be an {@link #TR069_UNSIGNED_INT} that contains the
+ number of child nodes in the table {@code (object-path)(table-name)}. For
+ example, if {@code A.B.CNumberOfEntries} is requested the return value
+ must be the number of child nodes under {@code A/B/C}.
+ </p><p>
+ If the value of a an {@code Alias} node is requested then the name of the
+ parent node must be returned. For example, if the path is
+ {@code M.X.Alias} then the returned value must be {@code X}.
+ </p><p>
+ The connector must attempt to create any missing nodes along the way,
+ creating parent nodes on demand.</p>
+   </description>
+
+<param name='parameterPath'>A parameter path (must refer to a valid parameter,
+        not an object or table).</param>
+
+<return>The name, value, and type triad of the requested parameter as
+         defined by the TR-069 {@code ParameterValueStruct}.</return>
+
+<throws name='TR069Exception'>The following fault codes are defined for this
+         method: 9001, 9002, 9003, 9004, 9005.
+         <ul>
+         <li> 9001 {@link TR069Exception#REQUEST_DENIED}</li><li> 9002
+         {@link TR069Exception#INTERNAL_ERROR}</li><li> 9003
+         {@link TR069Exception#INVALID_ARGUMENTS}</li><li> 9004
+         {@link TR069Exception#RESOURCES_EXCEEDED}</li><li> 9005
+         {@link TR069Exception#INVALID_PARAMETER_NAME}</li>
+         </ul></throws>
+
+
+    <parameter name='parameterPath' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+<exception name='TR069Exception' fqn='org.osgi.service.tr069todmt.TR069Exception'/>
+     </method>
+    <method name='getParameterNames' fqn='org.osgi.service.tr069todmt.TR069Connector.getParameterNames' qn='TR069Connector.getParameterNames(String,boolean)' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='Collection&lt;ParameterInfo&gt;' qualifiedTypeName='java.util.Collection' typeArgs='' dimension='' signature='(java.lang.String,boolean)' flatSignature='(String,boolean)'>
+   <lead>
+Getting the {@link ParameterInfo} objects addressed by path.
+   </lead>
+   <description>
+Getting the {@link ParameterInfo} objects addressed by path. This method
+ is intended to be used to implement the GetParameterNames RPC.
+ <p>
+ The connector must attempt to create any missing nodes that are needed
+ for the {@code objectOrTablePath} by using the
+ {@link #toURI(String, boolean)} method with {@code true}.
+ </p><p>
+ This method must traverse the sub-tree addressed by the path and return
+ the paths to all the objects, tables, and parameters in that tree. If the
+ nextLevel argument is {@code true} then only the children object, table,
+ and parameter information must be returned.
+ </p><p>
+ The returned {@link ParameterInfo} objects must be usable to discover the
+ sub-tree.
+ </p><p>
+ If the child nodes have an {@code InstanceId} node then the returned
+ names must include the {@code InstanceId} values instead of the node
+ names.
+ </p><p>
+ If the parent node is a {@code MAP}, then the synthetic {@code Alias}
+ parameter must be included.
+ </p><p>
+ Any {@code MAP} and {@code LIST} node must include a
+ {@link ParameterInfo} for the corresponding {@code NumberOfEntries}
+ parameter.</p>
+   </description>
+
+<param name='objectOrTablePath'>A path to an object or table.</param>
+<param name='nextLevel'>If {@code true} consider only the children of the object
+        or table addressed by {@code path}, otherwise include the whole
+        sub-tree, including the addressed object or table.</param>
+
+<return>A collection of {@link ParameterInfo} objects representing the
+         resulting child parameter, objects, and tables as defined by the
+         TR-069 {@code ParameterInfoStruct}.</return>
+
+<throws name='TR069Exception'>If the fault is caused by an invalid ParameterPath
+         value, the Invalid Parameter Name fault code (9005) MUST be used
+         instead of the more general Invalid Arguments fault code (9003).
+         A ParameterPath value must be considered invalid if it is not an
+         empty string and does not exactly match a parameter or object
+         name currently present in the data model. If {@code nextLevel} is
+         {@code true} and {@code objectOrTablePath} is a parameter path
+         rather than an object/table path, the method must return a fault
+         response with the Invalid Arguments fault code (9003). If the
+         value cannot be gotten for some reason, this method can generate
+         the following fault codes::
+         <ul>
+         <li> 9001 {@link TR069Exception#REQUEST_DENIED} </li> <li> 9002
+         {@link TR069Exception#INTERNAL_ERROR} </li> <li> 9003
+         {@link TR069Exception#INVALID_ARGUMENTS} </li> <li> 9005
+         {@link TR069Exception#INVALID_PARAMETER_NAME}</li>
+         </ul></throws>
+
+
+    <parameter name='objectOrTablePath' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+    <parameter name='nextLevel' dimension='' typeName='boolean' fqn='boolean' varargs='false'/>
+<exception name='TR069Exception' fqn='org.osgi.service.tr069todmt.TR069Exception'/>
+     </method>
+    <method name='addObject' fqn='org.osgi.service.tr069todmt.TR069Connector.addObject' qn='TR069Connector.addObject(String)' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='(java.lang.String)' flatSignature='(String)'>
+   <lead>
+Add a new node to the Dmt Admin as defined by the AddObject RPC.
+   </lead>
+   <description>
+Add a new node to the Dmt Admin as defined by the AddObject RPC.
+ 
+ The path must map to either a {@code LIST} or {@code MAP} node as no
+ other nodes can accept new children.
+ <p>
+ If the path ends in an alias ({@code [ ALIAS ]}) then the node name must
+ be the alias, however, no new node must be created. Otherwise, the
+ Connector must calculate a unique instance id for the new node name that
+ follows the TR-069 rules for instance ids. That is, this id must not be
+ reused and must not be in use. That is, the id must be reserved
+ persistently.
+ 
+ </p><p>
+ If the {@code LIST} or {@code MAP} node has a Meta Node with a MIME type
+ application/x-tr-069-eager then the node must be immediately created.
+ Otherwise no new node must be created, this node must be created when the
+ node is accessed in a subsequent RPC.
+ </p><p>
+ The alias name or instance id must be returned as identifier for the ACS.</p>
+   </description>
+
+<param name='path'>A table path with an optional alias at the end</param>
+
+<return>The name of the new node.</return>
+
+<throws name='TR069Exception'>The following fault codes are defined for this
+         method: 9001, 9002, 9003, 9004, 9005. If an AddObject request
+         would result in exceeding the maximum number of such objects
+         supported by the CPE, the CPE MUST return a fault response with
+         the Resources Exceeded (9004) fault code.</throws>
+
+
+    <parameter name='path' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+<exception name='TR069Exception' fqn='org.osgi.service.tr069todmt.TR069Exception'/>
+     </method>
+    <method name='deleteObject' fqn='org.osgi.service.tr069todmt.TR069Connector.deleteObject' qn='TR069Connector.deleteObject(String)' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='void' qualifiedTypeName='void' typeArgs='' dimension='' signature='(java.lang.String)' flatSignature='(String)'>
+   <lead>
+Delete an object from a table.
+   </lead>
+   <description>
+Delete an object from a table. A missing node must be ignored.
+   </description>
+
+<param name='objectPath'>The path to an object in a table to be deleted.</param>
+
+
+<throws name='TR069Exception'>The following fault codes are defined for this
+         method: 9001, 9002, 9003, 9005. If the fault is caused by an
+         invalid objectPath value, the Invalid Parameter Name fault code
+         (9005) must be used instead of the more general Invalid Arguments
+         fault code (9003). A missing node for {@code objectPath} must be
+         ignored.</throws>
+
+
+    <parameter name='objectPath' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+<exception name='TR069Exception' fqn='org.osgi.service.tr069todmt.TR069Exception'/>
+     </method>
+    <method name='toPath' fqn='org.osgi.service.tr069todmt.TR069Connector.toPath' qn='TR069Connector.toPath(String)' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='(java.lang.String)' flatSignature='(String)'>
+   <lead>
+Convert a Dmt Session relative Dmt Admin URI to a valid TR-069 path,
+ either a table, object, or parameter path depending on the structure of
+ the DMT.
+   </lead>
+   <description>
+Convert a Dmt Session relative Dmt Admin URI to a valid TR-069 path,
+ either a table, object, or parameter path depending on the structure of
+ the DMT. The translation takes into account the special meaning
+ {@code LIST}, {@code MAP} , {@code Alias}, and {@code InstanceId} nodes.
+   </description>
+
+<param name='uri'>A Dmt Session relative URI</param>
+
+<return>An object, table, or parameter path</return>
+
+<throws name='TR069Exception'>If there is an error</throws>
+
+
+    <parameter name='uri' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+<exception name='TR069Exception' fqn='org.osgi.service.tr069todmt.TR069Exception'/>
+     </method>
+    <method name='toURI' fqn='org.osgi.service.tr069todmt.TR069Connector.toURI' qn='TR069Connector.toURI(String,boolean)' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='(java.lang.String,boolean)' flatSignature='(String,boolean)'>
+   <lead>
+Convert a TR-069 path to a Dmt Session relative Dmt Admin URI.
+   </lead>
+   <description>
+Convert a TR-069 path to a Dmt Session relative Dmt Admin URI. The
+ translation takes into account the special meaning {@code LIST},
+ {@code MAP}, {@code InstanceId} node semantics.
+ <p>
+ The synthetic {@code Alias} or {@code NumberOfEntries} parameter cannot
+ be mapped and must throw an {@link TR069Exception#INVALID_PARAMETER_NAME}.
+ </p><p>
+ The returned path is properly escaped for TR-069.
+ </p><p>
+ The mapping from the path to a URI requires support from the meta data in
+ the DMT, it is not possible to use a mapping solely based on string
+ replacements. The translation takes into account the semantics of the MAP
+ and LIST nodes. If at a certain point a node under a {@code MAP} node
+ does not exist then the Connector can create it if the {@code create}
+ flag is set to {@code true}. Otherwise a non-existent node will terminate
+ the mapping.</p>
+   </description>
+
+<param name='name'>A TR-069 path</param>
+<param name='create'>If {@code true}, create missing nodes when they reside
+        under a MAP or LIST</param>
+
+<return>A relative Dmt Admin URI</return>
+
+<throws name='TR069Exception'>If there is an error</throws>
+
+
+    <parameter name='name' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+    <parameter name='create' dimension='' typeName='boolean' fqn='boolean' varargs='false'/>
+<exception name='TR069Exception' fqn='org.osgi.service.tr069todmt.TR069Exception'/>
+     </method>
+    <method name='close' fqn='org.osgi.service.tr069todmt.TR069Connector.close' qn='TR069Connector.close()' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='void' qualifiedTypeName='void' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Close this connector.
+   </lead>
+   <description>
+Close this connector. This will <b>not</b> close the corresponding
+ session.
+   </description>
+
+
+
+
+
+     </method>
+    <field name='PREFIX' fqn='org.osgi.service.tr069todmt.TR069Connector.PREFIX' qn='TR069Connector.PREFIX' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"application/x-tr-069-"'>
+   <lead>
+The MIME type prefix.
+   </lead>
+   <description>
+The MIME type prefix.
+   </description>
+
+     </field>
+    <field name='TR069_MIME_DEFAULT' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_DEFAULT' qn='TR069Connector.TR069_MIME_DEFAULT' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"application/x-tr-069-default"'>
+   <lead>
+Constant representing the default or unknown type.
+   </lead>
+   <description>
+Constant representing the default or unknown type. If this type is used a
+ default conversion will take place
+   </description>
+
+     </field>
+    <field name='TR069_MIME_INT' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_INT' qn='TR069Connector.TR069_MIME_INT' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"application/x-tr-069-int"'>
+   <lead>
+Constant representing the TR-069 integer type.
+   </lead>
+   <description>
+Constant representing the TR-069 integer type.
+   </description>
+
+     </field>
+    <field name='TR069_MIME_UNSIGNED_INT' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_UNSIGNED_INT' qn='TR069Connector.TR069_MIME_UNSIGNED_INT' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"application/x-tr-069-unsignedInt"'>
+   <lead>
+Constant representing the TR-069 unsigned integer type.
+   </lead>
+   <description>
+Constant representing the TR-069 unsigned integer type.
+   </description>
+
+     </field>
+    <field name='TR069_MIME_LONG' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_LONG' qn='TR069Connector.TR069_MIME_LONG' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"application/x-tr-069-long"'>
+   <lead>
+Constant representing the TR-069 long type.
+   </lead>
+   <description>
+Constant representing the TR-069 long type.
+   </description>
+
+     </field>
+    <field name='TR069_MIME_UNSIGNED_LONG' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_UNSIGNED_LONG' qn='TR069Connector.TR069_MIME_UNSIGNED_LONG' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"application/x-tr-069-unsignedLong"'>
+   <lead>
+Constant representing the TR-069 unsigned long type.
+   </lead>
+   <description>
+Constant representing the TR-069 unsigned long type.
+   </description>
+
+     </field>
+    <field name='TR069_MIME_STRING' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_STRING' qn='TR069Connector.TR069_MIME_STRING' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"application/x-tr-069-string"'>
+   <lead>
+Constant representing the TR-069 string type.
+   </lead>
+   <description>
+Constant representing the TR-069 string type.
+   </description>
+
+     </field>
+    <field name='TR069_MIME_STRING_LIST' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_STRING_LIST' qn='TR069Connector.TR069_MIME_STRING_LIST' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"application/x-tr-069-string-list"'>
+   <lead>
+Constant representing the TR-069 string list type.
+   </lead>
+   <description>
+Constant representing the TR-069 string list type.
+   </description>
+
+     </field>
+    <field name='TR069_MIME_BOOLEAN' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_BOOLEAN' qn='TR069Connector.TR069_MIME_BOOLEAN' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"application/x-tr-069-boolean"'>
+   <lead>
+Constant representing the TR-069 boolean type.
+   </lead>
+   <description>
+Constant representing the TR-069 boolean type.
+   </description>
+
+     </field>
+    <field name='TR069_MIME_BASE64' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_BASE64' qn='TR069Connector.TR069_MIME_BASE64' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"application/x-tr-069-base64"'>
+   <lead>
+Constant representing the TR-069 base64 type.
+   </lead>
+   <description>
+Constant representing the TR-069 base64 type.
+   </description>
+
+     </field>
+    <field name='TR069_MIME_HEXBINARY' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_HEXBINARY' qn='TR069Connector.TR069_MIME_HEXBINARY' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"application/x-tr-069-hexBinary"'>
+   <lead>
+Constant representing the TR-069 hex binary type.
+   </lead>
+   <description>
+Constant representing the TR-069 hex binary type.
+   </description>
+
+     </field>
+    <field name='TR069_MIME_DATETIME' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_DATETIME' qn='TR069Connector.TR069_MIME_DATETIME' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"application/x-tr-069-dateTime"'>
+   <lead>
+Constant representing the TR-069 date time type.
+   </lead>
+   <description>
+Constant representing the TR-069 date time type.
+   </description>
+
+     </field>
+    <field name='TR069_MIME_EAGER' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_MIME_EAGER' qn='TR069Connector.TR069_MIME_EAGER' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"application/x-tr-069-eager"'>
+   <lead>
+Constant representing the TR-069 eager type.
+   </lead>
+   <description>
+Constant representing the TR-069 eager type.
+   </description>
+
+     </field>
+    <field name='TR069_DEFAULT' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_DEFAULT' qn='TR069Connector.TR069_DEFAULT' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='0'>
+   <lead>
+Constant representing the default or unknown type.
+   </lead>
+   <description>
+Constant representing the default or unknown type. If this type is used a
+ default conversion will take place
+   </description>
+
+     </field>
+    <field name='TR069_INT' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_INT' qn='TR069Connector.TR069_INT' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='1'>
+   <lead>
+Constant representing the TR-069 integer type.
+   </lead>
+   <description>
+Constant representing the TR-069 integer type.
+   </description>
+
+     </field>
+    <field name='TR069_UNSIGNED_INT' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_UNSIGNED_INT' qn='TR069Connector.TR069_UNSIGNED_INT' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='2'>
+   <lead>
+Constant representing the TR-069 unsigned integer type.
+   </lead>
+   <description>
+Constant representing the TR-069 unsigned integer type.
+   </description>
+
+     </field>
+    <field name='TR069_LONG' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_LONG' qn='TR069Connector.TR069_LONG' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='4'>
+   <lead>
+Constant representing the TR-069 long type.
+   </lead>
+   <description>
+Constant representing the TR-069 long type.
+   </description>
+
+     </field>
+    <field name='TR069_UNSIGNED_LONG' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_UNSIGNED_LONG' qn='TR069Connector.TR069_UNSIGNED_LONG' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='8'>
+   <lead>
+Constant representing the TR-069 unsigned long type.
+   </lead>
+   <description>
+Constant representing the TR-069 unsigned long type.
+   </description>
+
+     </field>
+    <field name='TR069_STRING' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_STRING' qn='TR069Connector.TR069_STRING' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='16'>
+   <lead>
+Constant representing the TR-069 string type.
+   </lead>
+   <description>
+Constant representing the TR-069 string type.
+   </description>
+
+     </field>
+    <field name='TR069_BOOLEAN' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_BOOLEAN' qn='TR069Connector.TR069_BOOLEAN' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='32'>
+   <lead>
+Constant representing the TR-069 boolean type.
+   </lead>
+   <description>
+Constant representing the TR-069 boolean type.
+   </description>
+
+     </field>
+    <field name='TR069_BASE64' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_BASE64' qn='TR069Connector.TR069_BASE64' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='64'>
+   <lead>
+Constant representing the TR-069 base64 type.
+   </lead>
+   <description>
+Constant representing the TR-069 base64 type.
+   </description>
+
+     </field>
+    <field name='TR069_HEXBINARY' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_HEXBINARY' qn='TR069Connector.TR069_HEXBINARY' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='128'>
+   <lead>
+Constant representing the TR-069 hex binary type.
+   </lead>
+   <description>
+Constant representing the TR-069 hex binary type.
+   </description>
+
+     </field>
+    <field name='TR069_DATETIME' fqn='org.osgi.service.tr069todmt.TR069Connector.TR069_DATETIME' qn='TR069Connector.TR069_DATETIME' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='256'>
+   <lead>
+Constant representing the TR-069 date time type.
+   </lead>
+   <description>
+Constant representing the TR-069 date time type.
+   </description>
+
+     </field>
+  </class>
+  <class name='TR069ConnectorFactory' fqn='org.osgi.service.tr069todmt.TR069ConnectorFactory' qn='TR069ConnectorFactory' package='org.osgi.service.tr069todmt' typeParam='' modifiers='public abstract' interface='yes' kind='INTERFACE'>
+   <lead>
+A service that can create TR069 Connector
+   </lead>
+   <description>
+A service that can create TR069 Connector
+   </description>
+
+    <method name='create' fqn='org.osgi.service.tr069todmt.TR069ConnectorFactory.create' qn='TR069ConnectorFactory.create(DmtSession)' package='org.osgi.service.tr069todmt' modifiers='public abstract' typeName='TR069Connector' qualifiedTypeName='org.osgi.service.tr069todmt.TR069Connector' typeArgs='' dimension='' signature='(org.osgi.service.dmt.DmtSession)' flatSignature='(DmtSession)'>
+   <lead>
+Create a TR069 connector based on the given session .
+   </lead>
+   <description>
+Create a TR069 connector based on the given session .
+ <p>
+ The session must be an atomic session when objects are added and/or
+ parameters are going to be set, otherwise it can be a read only or
+ exclusive session. Due to the lazy creation nature of the TR069 Connector
+ it is possible that a node must be created in a read method after a node
+ has been added, it is therefore necessary to always provide an atomic
+ session when an ACS session requires modifying parameters.</p>
+   </description>
+
+<param name='session'>The session to use for the adaption. This session must not
+        be closed before the TR069 Connector is closed.</param>
+
+<return>A new TR069 Connector bound to the given session</return>
+
+
+
+    <parameter name='session' dimension='' typeName='DmtSession' fqn='org.osgi.service.dmt.DmtSession' varargs='false'/>
+     </method>
+  </class>
+  <class name='TR069Exception' fqn='org.osgi.service.tr069todmt.TR069Exception' qn='TR069Exception' package='org.osgi.service.tr069todmt' typeParam='' modifiers='public class' superclass='RuntimeException' kind='CLASS'>
+   <lead>
+This exception is defined in terms of applicable TR-069 fault codes.
+   </lead>
+   <description>
+This exception is defined in terms of applicable TR-069 fault codes. The
+ TR-069 specification defines the fault codes that can occur in different
+ situations.
+   </description>
+
+    <method name='TR069Exception' fqn='org.osgi.service.tr069todmt.TR069Exception.TR069Exception' qn='TR069Exception.TR069Exception(String)' package='org.osgi.service.tr069todmt' typeArgs='' modifiers='public' signature='(java.lang.String)' flatSignature='(String)' isConstructor='true'>
+   <lead>
+A default constructor when only a message is known.
+   </lead>
+   <description>
+A default constructor when only a message is known. This will generate a
+ {@link #INTERNAL_ERROR} fault.
+   </description>
+
+<param name='message'>The message</param>
+
+
+
+
+    <parameter name='message' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+     </method>
+    <method name='TR069Exception' fqn='org.osgi.service.tr069todmt.TR069Exception.TR069Exception' qn='TR069Exception.TR069Exception(String,int,DmtException)' package='org.osgi.service.tr069todmt' typeArgs='' modifiers='public' signature='(java.lang.String,int,org.osgi.service.dmt.DmtException)' flatSignature='(String,int,DmtException)' isConstructor='true'>
+   <lead>
+A Constructor with a message and a fault code.
+   </lead>
+   <description>
+A Constructor with a message and a fault code.
+   </description>
+
+<param name='message'>The message</param>
+<param name='faultCode'>The TR-069 defined fault code</param>
+<param name='e'/>
+
+
+
+
+    <parameter name='message' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+    <parameter name='faultCode' dimension='' typeName='int' fqn='int' varargs='false'/>
+    <parameter name='e' dimension='' typeName='DmtException' fqn='org.osgi.service.dmt.DmtException' varargs='false'/>
+     </method>
+    <method name='TR069Exception' fqn='org.osgi.service.tr069todmt.TR069Exception.TR069Exception' qn='TR069Exception.TR069Exception(String,int)' package='org.osgi.service.tr069todmt' typeArgs='' modifiers='public' signature='(java.lang.String,int)' flatSignature='(String,int)' isConstructor='true'>
+   <lead>
+A Constructor with a message and a fault code.
+   </lead>
+   <description>
+A Constructor with a message and a fault code.
+   </description>
+
+<param name='message'>The message</param>
+<param name='faultCode'>The TR-069 defined fault code</param>
+
+
+
+
+    <parameter name='message' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+    <parameter name='faultCode' dimension='' typeName='int' fqn='int' varargs='false'/>
+     </method>
+    <method name='TR069Exception' fqn='org.osgi.service.tr069todmt.TR069Exception.TR069Exception' qn='TR069Exception.TR069Exception(DmtException)' package='org.osgi.service.tr069todmt' typeArgs='' modifiers='public' signature='(org.osgi.service.dmt.DmtException)' flatSignature='(DmtException)' isConstructor='true'>
+   <lead>
+Create a TR069Exception from a Dmt Exception.
+   </lead>
+   <description>
+Create a TR069Exception from a Dmt Exception.
+   </description>
+
+<param name='e'>The Dmt Exception</param>
+
+
+
+
+    <parameter name='e' dimension='' typeName='DmtException' fqn='org.osgi.service.dmt.DmtException' varargs='false'/>
+     </method>
+    <method name='getFaultCode' fqn='org.osgi.service.tr069todmt.TR069Exception.getFaultCode' qn='TR069Exception.getFaultCode()' package='org.osgi.service.tr069todmt' modifiers='public' typeName='int' qualifiedTypeName='int' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Answer the associated TR-069 fault code.
+   </lead>
+   <description>
+Answer the associated TR-069 fault code.
+   </description>
+
+
+<return>Answer the associated TR-069 fault code.</return>
+
+
+
+     </method>
+    <method name='getDmtException' fqn='org.osgi.service.tr069todmt.TR069Exception.getDmtException' qn='TR069Exception.getDmtException()' package='org.osgi.service.tr069todmt' modifiers='public' typeName='DmtException' qualifiedTypeName='org.osgi.service.dmt.DmtException' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead/>
+   <description/>
+
+
+<return>the corresponding Dmt Exception</return>
+
+
+
+     </method>
+    <field name='METHOD_NOT_SUPPORTED' fqn='org.osgi.service.tr069todmt.TR069Exception.METHOD_NOT_SUPPORTED' qn='TR069Exception.METHOD_NOT_SUPPORTED' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='9000'>
+   <lead>
+9000 Method not supported
+   </lead>
+   <description>
+9000 Method not supported
+   </description>
+
+     </field>
+    <field name='REQUEST_DENIED' fqn='org.osgi.service.tr069todmt.TR069Exception.REQUEST_DENIED' qn='TR069Exception.REQUEST_DENIED' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='9001'>
+   <lead>
+9001 Request denied (no reason specified
+   </lead>
+   <description>
+9001 Request denied (no reason specified
+   </description>
+
+     </field>
+    <field name='INTERNAL_ERROR' fqn='org.osgi.service.tr069todmt.TR069Exception.INTERNAL_ERROR' qn='TR069Exception.INTERNAL_ERROR' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='9002'>
+   <lead>
+9002 Internal error
+   </lead>
+   <description>
+9002 Internal error
+   </description>
+
+     </field>
+    <field name='INVALID_ARGUMENTS' fqn='org.osgi.service.tr069todmt.TR069Exception.INVALID_ARGUMENTS' qn='TR069Exception.INVALID_ARGUMENTS' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='9003'>
+   <lead>
+9003 Invalid Arguments
+   </lead>
+   <description>
+9003 Invalid Arguments
+   </description>
+
+     </field>
+    <field name='RESOURCES_EXCEEDED' fqn='org.osgi.service.tr069todmt.TR069Exception.RESOURCES_EXCEEDED' qn='TR069Exception.RESOURCES_EXCEEDED' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='9004'>
+   <lead>
+9004 Resources exceeded (when used in association with
+ SetParameterValues, this MUST NOT be used to indicate parameters in
+ error)
+   </lead>
+   <description>
+9004 Resources exceeded (when used in association with
+ SetParameterValues, this MUST NOT be used to indicate parameters in
+ error)
+   </description>
+
+     </field>
+    <field name='INVALID_PARAMETER_NAME' fqn='org.osgi.service.tr069todmt.TR069Exception.INVALID_PARAMETER_NAME' qn='TR069Exception.INVALID_PARAMETER_NAME' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='9005'>
+   <lead>
+9005 Invalid parameter name (associated with Set/GetParameterValues,
+ GetParameterNames, Set/GetParameterAttributes, AddObject, and
+ DeleteObject)
+   </lead>
+   <description>
+9005 Invalid parameter name (associated with Set/GetParameterValues,
+ GetParameterNames, Set/GetParameterAttributes, AddObject, and
+ DeleteObject)
+   </description>
+
+     </field>
+    <field name='INVALID_PARAMETER_TYPE' fqn='org.osgi.service.tr069todmt.TR069Exception.INVALID_PARAMETER_TYPE' qn='TR069Exception.INVALID_PARAMETER_TYPE' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='9006'>
+   <lead>
+9006 Invalid parameter type (associated with SetParameterValues)
+   </lead>
+   <description>
+9006 Invalid parameter type (associated with SetParameterValues)
+   </description>
+
+     </field>
+    <field name='INVALID_PARAMETER_VALUE' fqn='org.osgi.service.tr069todmt.TR069Exception.INVALID_PARAMETER_VALUE' qn='TR069Exception.INVALID_PARAMETER_VALUE' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='9007'>
+   <lead>
+9007 Invalid parameter value (associated with SetParameterValues)
+   </lead>
+   <description>
+9007 Invalid parameter value (associated with SetParameterValues)
+   </description>
+
+     </field>
+    <field name='NON_WRITABLE_PARAMETER' fqn='org.osgi.service.tr069todmt.TR069Exception.NON_WRITABLE_PARAMETER' qn='TR069Exception.NON_WRITABLE_PARAMETER' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='9008'>
+   <lead>
+9008 Attempt to set a non-writable parameter (associated with
+ SetParameterValues)
+   </lead>
+   <description>
+9008 Attempt to set a non-writable parameter (associated with
+ SetParameterValues)
+   </description>
+
+     </field>
+    <field name='NOTIFICATION_REJECTED' fqn='org.osgi.service.tr069todmt.TR069Exception.NOTIFICATION_REJECTED' qn='TR069Exception.NOTIFICATION_REJECTED' package='org.osgi.service.tr069todmt' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='9009'>
+   <lead>
+9009 Notification request rejected (associated with
+ SetParameterAttributes method).
+   </lead>
+   <description>
+9009 Notification request rejected (associated with
+ SetParameterAttributes method).
+   </description>
+
+     </field>
+  </class>
+  </package>
+</top>
