@@ -7,7 +7,7 @@
 	<artifactId>org.osgi.service.tr069todmt.reactor</artifactId>
 	<version>${revision}</version>
 	<packaging>pom</packaging>
-	<description>OSGi Specification repo for org.osgi.service.tr069todmt</description>
+	<description>OSGi TR069 Connector Service Specification</description>
 
 	<!-- The version lives in exactly one place: .mvn/maven.config
 	     (-Drevision=...). Maven picks that file up from the repo root for
@@ -53,6 +53,10 @@
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
+
+	<properties>
+		<osgi.scm.repository>osgi/org.osgi.service.tr069todmt</osgi.scm.repository>
+	</properties>
 
 	<modules>
 		<module>api</module>
