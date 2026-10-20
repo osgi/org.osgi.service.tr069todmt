@@ -17,9 +17,11 @@
  *******************************************************************************/
 package org.osgi.test.cases.tr069todmt.junit;
 
+import static org.osgi.test.cases.tr069todmt.junit.TR069TestSupport.assertConstant;
+
+import org.junit.jupiter.api.Test;
 import org.osgi.service.tr069todmt.TR069Connector;
 import org.osgi.service.tr069todmt.TR069Exception;
-import org.osgi.test.support.compatibility.DefaultTestBundleControl;
 
 /**
  * This testcase checks for the correct Constants in the TR069Connector interface.
@@ -27,13 +29,14 @@ import org.osgi.test.support.compatibility.DefaultTestBundleControl;
  * @author steffen.druesedow@telekom.de
  *
  */
-public class TR069ConnectorConstantsTestCase extends DefaultTestBundleControl {
+public class TR069ConnectorConstantsTestCase {
 
 	/**
 	 * This test ensures that the specified Interfaces define the specified Constants.
 	 *  
 	 * @throws Exception
 	 */
+	@Test
 	public void testInterfaceConstants() throws Exception {
 
 		// TR069Connector

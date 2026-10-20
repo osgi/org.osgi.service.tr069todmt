@@ -17,6 +17,11 @@
  *******************************************************************************/
 package org.osgi.test.cases.tr069todmt.junit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.osgi.service.dmt.DmtData;
 import org.osgi.service.dmt.DmtException;
 import org.osgi.service.dmt.DmtIllegalStateException;
@@ -36,10 +41,11 @@ import org.osgi.service.tr069todmt.TR069Exception;
  */
 public class TR069ConnectorTR069IntToDmtTestCase extends TR069ToDmtTestBase {
 
+	@BeforeEach
 	public void setUp() throws Exception {
 		super.setUp();
 		factory = getService(TR069ConnectorFactory.class);
-		assertNotNull("Unable to get the TR069ConnectorFactory.", factory);
+		assertThat(factory).as("Unable to get the TR069ConnectorFactory.").isNotNull();
 	}
 
 	/**
@@ -53,6 +59,7 @@ public class TR069ConnectorTR069IntToDmtTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testTR069IntToDmtWithSingleFormat() throws Exception {
 
 		// register a plugin that has nodes for each format
@@ -65,30 +72,30 @@ public class TR069ConnectorTR069IntToDmtTestCase extends TR069ToDmtTestBase {
 		// integer params can be set to nodes of INTEGER, LONG, FLOAT or STRING format 
 		connector.setParameterValue(SINGLETON + "." + INTEGER, "123", TR069Connector.TR069_INT );
 		DmtData data = session.getNodeValue(SINGLETON + "/" + INTEGER);
-		assertEquals( 123, data.getInt());
-		assertEquals( DmtData.FORMAT_INTEGER, data.getFormat());
+		assertThat(data.getInt()).isEqualTo(123);
+		assertThat(data.getFormat()).isEqualTo(DmtData.FORMAT_INTEGER);
 
 		connector.setParameterValue(SINGLETON + "." + FLOAT, "123", TR069Connector.TR069_INT );
 		data = session.getNodeValue(SINGLETON + "/" + FLOAT);
-		assertEquals( 123f, data.getFloat());
-		assertEquals( DmtData.FORMAT_FLOAT, data.getFormat());
+		assertThat(data.getFloat()).isEqualTo(123f);
+		assertThat(data.getFormat()).isEqualTo(DmtData.FORMAT_FLOAT);
 
 		connector.setParameterValue(SINGLETON + "." + LONG, "123", TR069Connector.TR069_INT );
 		data = session.getNodeValue(SINGLETON + "/" + LONG);
-		assertEquals( 123l, data.getLong());
-		assertEquals( DmtData.FORMAT_LONG, data.getFormat());
+		assertThat(data.getLong()).isEqualTo(123l);
+		assertThat(data.getFormat()).isEqualTo(DmtData.FORMAT_LONG);
 
 		connector.setParameterValue(SINGLETON + "." + STRING, "123", TR069Connector.TR069_INT );
 		data = session.getNodeValue(SINGLETON + "/" + STRING);
-		assertEquals( "123", data.getString());
-		assertEquals( DmtData.FORMAT_STRING, data.getFormat());
+		assertThat(data.getString()).isEqualTo("123");
+		assertThat(data.getFormat()).isEqualTo(DmtData.FORMAT_STRING);
 
 		// non parsable values must be set directly to String nodes (see table 131.7 TR-069 Value to Dmt Data)
 		try {
 			connector.setParameterValue(SINGLETON + "." + STRING, "123xu", TR069Connector.TR069_INT );
 			data = session.getNodeValue(SINGLETON + "/" + STRING);
-			assertEquals( "123xu", data.getString());
-			assertEquals( DmtData.FORMAT_STRING, data.getFormat());
+			assertThat(data.getString()).isEqualTo("123xu");
+			assertThat(data.getFormat()).isEqualTo(DmtData.FORMAT_STRING);
 		} catch (TR069Exception e) {
 			fail("Non number values must be set unchanged to Dmt nodes with FORMAT_STRING.");
 		}
@@ -99,7 +106,7 @@ public class TR069ConnectorTR069IntToDmtTestCase extends TR069ToDmtTestBase {
 			connector.setParameterValue(SINGLETON + "." + INTEGER, "" + Long.MIN_VALUE, TR069Connector.TR069_INT );
 			fail("These conversions must not be possible because they exceed the range of Integer values.");
 		} catch (TR069Exception e) {
-			assertEquals( TR069Exception.INVALID_PARAMETER_VALUE, e.getFaultCode() );
+			assertThat(e.getFaultCode()).isEqualTo(TR069Exception.INVALID_PARAMETER_VALUE);
 		}
 
 
@@ -115,7 +122,7 @@ public class TR069ConnectorTR069IntToDmtTestCase extends TR069ToDmtTestBase {
 			connector.setParameterValue(SINGLETON + "." + STRING, "hello", TR069Connector.TR069_INT );
 			fail("These conversions must not be possible because the given value can't be parsed as a number.");
 		} catch (TR069Exception e) {
-			assertEquals( TR069Exception.INVALID_PARAMETER_VALUE, e.getFaultCode() );
+			assertThat(e.getFaultCode()).isEqualTo(TR069Exception.INVALID_PARAMETER_VALUE);
 		}
 		
 		// try to set integer value to nodes with non-applicable formats
@@ -133,7 +140,8 @@ public class TR069ConnectorTR069IntToDmtTestCase extends TR069ToDmtTestBase {
 			fail("Conversions to formats that are not listed in the nodes MetaData must not be possible.");
 		} catch (TR069Exception e) {
 			// TODO: what fault codes to check here exactly ? 
-			assertTrue( e.getFaultCode() >= 9001 && e.getFaultCode() <= 9007 );
+			assertThat(e.getFaultCode()).isGreaterThanOrEqualTo(9001);
+			assertThat(e.getFaultCode()).isLessThanOrEqualTo(9007);
 		}
 	}
 
@@ -153,6 +161,7 @@ public class TR069ConnectorTR069IntToDmtTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testTR069IntToDmtWithoutFormats() throws Exception {
 		// register a plugin that has nodes without associated metadata, i.e. no declared formats
 		prepareTestNodeWithoutFormats();
@@ -177,6 +186,7 @@ public class TR069ConnectorTR069IntToDmtTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testTR069IntToDmtWithMultipleFormats() throws Exception {
 		// register a plugin that has nodes with the given OR-ed formats
 		prepareTestNodeWithFormats(ALL_DMT_FORMATS);
@@ -198,42 +208,42 @@ public class TR069ConnectorTR069IntToDmtTestCase extends TR069ToDmtTestBase {
 		connector.setParameterValue(SINGLETON + "." + UNKNOWN, "123", TR069Connector.TR069_INT );
 		DmtData data = session.getNodeValue(SINGLETON + "/" + UNKNOWN);
 		try {
-			assertEquals( "Wrong value found in Dmt for value: " + 123, 123, data.getInt() );
+			assertThat(data.getInt()).as("Wrong value found in Dmt for value: " + 123).isEqualTo(123);
 		} catch (DmtIllegalStateException e) {
-			fail( "Expected DmtData value of FORMAT_INTEGER");
+			fail("Expected DmtData value of FORMAT_INTEGER");
 		}
-		assertEquals( DmtData.FORMAT_INTEGER, data.getFormat());
+		assertThat(data.getFormat()).isEqualTo(DmtData.FORMAT_INTEGER);
 		
 		// set value that exceeds integer range - expect long
 		connector.setParameterValue(SINGLETON + "." + UNKNOWN, "" + Long.MAX_VALUE, TR069Connector.TR069_INT );
 		data = session.getNodeValue(SINGLETON + "/" + UNKNOWN);
 		try {
-			assertEquals( "Wrong value found in Dmt for value: " + Long.MAX_VALUE, Long.MAX_VALUE, data.getLong() );
+			assertThat(data.getLong()).as("Wrong value found in Dmt for value: " + Long.MAX_VALUE).isEqualTo(Long.MAX_VALUE);
 		} catch (DmtIllegalStateException e) {
-			fail( "Expected DmtData value of FORMAT_LONG");
+			fail("Expected DmtData value of FORMAT_LONG");
 		}
-		assertEquals( DmtData.FORMAT_LONG, data.getFormat());
+		assertThat(data.getFormat()).isEqualTo(DmtData.FORMAT_LONG);
 		
 		// set rational number - expect float
 		float floatValue = 123.456f;
 		connector.setParameterValue(SINGLETON + "." + UNKNOWN, "" + floatValue, TR069Connector.TR069_INT );
 		data = session.getNodeValue(SINGLETON + "/" + UNKNOWN);
 		try {
-			assertEquals( "Wrong value found in Dmt for value: " + floatValue, floatValue, data.getFloat() );
+			assertThat(data.getFloat()).as("Wrong value found in Dmt for value: " + floatValue).isEqualTo(floatValue);
 		} catch (DmtIllegalStateException e) {
-			fail( "Expected DmtData value of FORMAT_FLOAT");
+			fail("Expected DmtData value of FORMAT_FLOAT");
 		}
-		assertEquals( DmtData.FORMAT_FLOAT, data.getFormat());
+		assertThat(data.getFormat()).isEqualTo(DmtData.FORMAT_FLOAT);
 
 		// set something that can't be parsed as number - expect same value as String
 		String unparsableValue = "Hello World!";
 		connector.setParameterValue(SINGLETON + "." + UNKNOWN, "" + unparsableValue, TR069Connector.TR069_INT );
 		data = session.getNodeValue(SINGLETON + "/" + UNKNOWN);
 		try {
-			assertEquals( "Wrong value found in Dmt for value: " + unparsableValue, unparsableValue, data.getString() );
+			assertThat(data.getString()).as("Wrong value found in Dmt for value: " + unparsableValue).isEqualTo(unparsableValue);
 		} catch (DmtIllegalStateException e) {
-			fail( "Expected DmtData value of FORMAT_STRING");
+			fail("Expected DmtData value of FORMAT_STRING");
 		}
-		assertEquals( DmtData.FORMAT_STRING, data.getFormat());
+		assertThat(data.getFormat()).isEqualTo(DmtData.FORMAT_STRING);
 	}
 }

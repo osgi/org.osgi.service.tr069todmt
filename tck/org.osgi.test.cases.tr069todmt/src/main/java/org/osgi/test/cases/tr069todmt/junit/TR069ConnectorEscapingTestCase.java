@@ -17,12 +17,17 @@
  *******************************************************************************/
 package org.osgi.test.cases.tr069todmt.junit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.osgi.service.dmt.DmtData;
 import org.osgi.service.dmt.DmtException;
 import org.osgi.service.dmt.DmtSession;
@@ -41,10 +46,11 @@ import org.osgi.service.tr069todmt.TR069Exception;
 public class TR069ConnectorEscapingTestCase extends TR069ToDmtTestBase {
 
 	
+	@BeforeEach
 	public void setUp() throws Exception {
 		super.setUp();
 		factory = getService(TR069ConnectorFactory.class);
-		assertNotNull("Unable to get the TR069ConnectorFactory.", factory);
+		assertThat(factory).as("Unable to get the TR069ConnectorFactory.").isNotNull();
 	}
 
 	
@@ -57,6 +63,7 @@ public class TR069ConnectorEscapingTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testResultEscaping() throws Exception {
 		// setup a simple Plugin structure and register the plugin
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
@@ -79,13 +86,12 @@ public class TR069ConnectorEscapingTestCase extends TR069ToDmtTestBase {
 			for (String leaf : mapUriToPath.keySet()) 
 				session.createLeafNode(leaf, new DmtData("value"));
 		} catch (DmtException e) {
-			fail( "Unexpected DmtException while adding example leaf nodes to the singleton." );
+			fail("Unexpected DmtException while adding example leaf nodes to the singleton.");
 		}
 		
 		// check escaping of toPath() method on the leaf nodes
 		for (String uri : mapUriToPath.keySet()) 
-			assertEquals( "The segment name '" + uri + "' escaped to TR069 must result in: " + mapUriToPath.get(uri),
-					mapUriToPath.get(uri), connector.toPath(uri));
+			assertThat(connector.toPath(uri)).as("The segment name '" + uri + "' escaped to TR069 must result in: " + mapUriToPath.get(uri)).isEqualTo(mapUriToPath.get(uri));
 		
 		// check getParameterNames on Singleton node with nextLevel = true --> only the encoded leaf names must be returned
 		List<String> expected = new ArrayList<String>();
@@ -96,14 +102,14 @@ public class TR069ConnectorEscapingTestCase extends TR069ToDmtTestBase {
 		expected.add( "description" );
 		
 		Collection<ParameterInfo> infos = connector.getParameterNames("", true);
-		assertNotNull(infos);
+		assertThat(infos).isNotNull();
 		for (ParameterInfo info : infos ) {
 			if ( ! expected.contains(info.getPath() ))
 				unexpected.add(info.getPath());
 			expected.remove(info.getPath());
 		}
-		assertEquals("There are unexpected results in the returned ParameterNames: " + unexpected, 0, unexpected.size());
-		assertEquals("Expected results are missing in the returned ParameterNames: " + expected, 0, expected.size());
+		assertThat(unexpected).as("There are unexpected results in the returned ParameterNames: " + unexpected).isEmpty();
+		assertThat(expected).as("Expected results are missing in the returned ParameterNames: " + expected).isEmpty();
 
 		// getParameterNames on instanceId's was already tested in TR069ConnectorOperationsTestCase 
 		session.close();
@@ -117,13 +123,11 @@ public class TR069ConnectorEscapingTestCase extends TR069ToDmtTestBase {
 		// --> must not be encoded 
 		String uriListInstance = LISTNODE + "/0";
 		String uriMapInstance = MAPNODE + "/key0";
-		assertTrue(session.isNodeUri(uriListInstance));
-		assertTrue(session.isNodeUri(uriMapInstance));
+		assertThat(session.isNodeUri(uriListInstance)).isTrue();
+		assertThat(session.isNodeUri(uriMapInstance)).isTrue();
 		
-		assertEquals( "The list index in '" + uriListInstance + "' must not be escaped!",
-				LISTNODE + ".100.", connector.toPath(uriListInstance));
-		assertEquals( "The map index in '" + uriMapInstance + "' must not be escaped!",
-				MAPNODE + ".100.", connector.toPath(uriMapInstance));
+		assertThat(connector.toPath(uriListInstance)).as("The list index in '" + uriListInstance + "' must not be escaped!").isEqualTo(LISTNODE + ".100.");
+		assertThat(connector.toPath(uriMapInstance)).as("The map index in '" + uriMapInstance + "' must not be escaped!").isEqualTo(MAPNODE + ".100.");
 	}
 
 	
@@ -136,6 +140,7 @@ public class TR069ConnectorEscapingTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testOnlyEncodedPathesAccepted() throws Exception {
 		// setup a simple Plugin structure and register the plugin
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
@@ -151,7 +156,7 @@ public class TR069ConnectorEscapingTestCase extends TR069ToDmtTestBase {
 			session.createLeafNode("application\\/bin", new DmtData("value"));
 			session.createLeafNode("234", new DmtData("value"));
 		} catch (DmtException e) {
-			fail( "Unexpected DmtException while adding example leaf nodes to the singleton." );
+			fail("Unexpected DmtException while adding example leaf nodes to the singleton.");
 		}
 		
 		// check getParameterNames, getParameterValue, setParameterValue, toUri
@@ -168,6 +173,7 @@ public class TR069ConnectorEscapingTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testUnrequiredEncodingsAccepted() throws Exception {
 		// setup a simple Plugin structure and register the plugin
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
@@ -181,7 +187,7 @@ public class TR069ConnectorEscapingTestCase extends TR069ToDmtTestBase {
 			session.createLeafNode("Hello World", new DmtData("value"));
 			session.createLeafNode("123", new DmtData("value"));
 		} catch (DmtException e) {
-			fail( "Unexpected DmtException while adding example leaf nodes to the singleton." );
+			fail("Unexpected DmtException while adding example leaf nodes to the singleton.");
 		}
 		
 		// check getParameterNames, getParameterValue, setParameterValue, toUri
@@ -201,31 +207,27 @@ public class TR069ConnectorEscapingTestCase extends TR069ToDmtTestBase {
 	private void assertUnescapedParameterNotAccepted(String parameter) {
 		try {
 			connector.getParameterNames(parameter, false);
-			fail( "GetParameterNames must not accept unescaped parameters: " + parameter );
+			fail("GetParameterNames must not accept unescaped parameters: " + parameter);
 		} catch (TR069Exception e) {
-			assertEquals( "getParameterNames must throw 9005 for param: " + parameter,
-					TR069Exception.INVALID_PARAMETER_NAME, e.getFaultCode());
+			assertThat(e.getFaultCode()).as("getParameterNames must throw 9005 for param: " + parameter).isEqualTo(TR069Exception.INVALID_PARAMETER_NAME);
 		}
 		try {
 			connector.getParameterValue(parameter);
-			fail( "GetParameterValue must not accept unescaped parameters: " + parameter );
+			fail("GetParameterValue must not accept unescaped parameters: " + parameter);
 		} catch (TR069Exception e) {
-			assertEquals( "getParameterNames must throw 9005 for param: " + parameter,
-					TR069Exception.INVALID_PARAMETER_NAME, e.getFaultCode());
+			assertThat(e.getFaultCode()).as("getParameterNames must throw 9005 for param: " + parameter).isEqualTo(TR069Exception.INVALID_PARAMETER_NAME);
 		}
 		try {
 			connector.setParameterValue(parameter, "newValue", TR069Connector.TR069_STRING );
-			fail( "SetParameterValue must not accept unescaped parameters: " + parameter );
+			fail("SetParameterValue must not accept unescaped parameters: " + parameter);
 		} catch (TR069Exception e) {
-			assertEquals( "getParameterNames must throw 9005 for param: " + parameter,
-					TR069Exception.INVALID_PARAMETER_NAME, e.getFaultCode());
+			assertThat(e.getFaultCode()).as("getParameterNames must throw 9005 for param: " + parameter).isEqualTo(TR069Exception.INVALID_PARAMETER_NAME);
 		}
 		try {
 			connector.toURI(parameter, false );
-			fail( "toUri must not accept unescaped parameters: " + parameter );
+			fail("toUri must not accept unescaped parameters: " + parameter);
 		} catch (TR069Exception e) {
-			assertEquals( "getParameterNames must throw 9005 for param: " + parameter,
-					TR069Exception.INVALID_PARAMETER_NAME, e.getFaultCode());
+			assertThat(e.getFaultCode()).as("getParameterNames must throw 9005 for param: " + parameter).isEqualTo(TR069Exception.INVALID_PARAMETER_NAME);
 		}
 	}
 	
@@ -242,31 +244,31 @@ public class TR069ConnectorEscapingTestCase extends TR069ToDmtTestBase {
 	private void assertUnnecessaryEscapingAccepted( String parameter ) {
 		try {
 			connector.getParameterNames(parameter, false);
-			pass( "GetParameterNames accepts unrequired escapings on parameters: " + parameter );
+			System.out.println("GetParameterNames accepts unrequired escapings on parameters: " + parameter);
 		} catch (TR069Exception e) {
 			e.printStackTrace();
-			fail( "GetParameterNames must accept unrequired escapings on parameters: " + parameter );
+			fail("GetParameterNames must accept unrequired escapings on parameters: " + parameter);
 		}
 		try {
 			connector.getParameterValue(parameter);
-			pass( "GetParameterValue accepts unrequired escapings on parameters: " + parameter );
+			System.out.println("GetParameterValue accepts unrequired escapings on parameters: " + parameter);
 		} catch (TR069Exception e) {
 			e.printStackTrace();
-			fail( "GetParameterValue must accept unrequired escapings on parameters: " + parameter );
+			fail("GetParameterValue must accept unrequired escapings on parameters: " + parameter);
 		}
 		try {
 			connector.setParameterValue(parameter, "newValue", TR069Connector.TR069_STRING );
-			pass( "SetParameterValue accepts unrequired escapings on parameters: " + parameter );
+			System.out.println("SetParameterValue accepts unrequired escapings on parameters: " + parameter);
 		} catch (TR069Exception e) {
 			e.printStackTrace();
-			fail( "SetParameterValue must accept unrequired escapings on parameters: " + parameter );
+			fail("SetParameterValue must accept unrequired escapings on parameters: " + parameter);
 		}
 		try {
 			connector.toURI(parameter, false );
-			pass( "toURI accepts unrequired escapings on parameters: " + parameter );
+			System.out.println("toURI accepts unrequired escapings on parameters: " + parameter);
 		} catch (TR069Exception e) {
 			e.printStackTrace();
-			fail( "toURI must accept unrequired escapings on parameters: " + parameter );
+			fail("toURI must accept unrequired escapings on parameters: " + parameter);
 		}
 	}
 	
