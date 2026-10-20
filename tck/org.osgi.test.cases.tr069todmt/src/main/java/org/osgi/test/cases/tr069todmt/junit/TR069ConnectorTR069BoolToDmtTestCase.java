@@ -17,6 +17,11 @@
  *******************************************************************************/
 package org.osgi.test.cases.tr069todmt.junit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.osgi.service.dmt.DmtData;
 import org.osgi.service.dmt.DmtSession;
 import org.osgi.service.tr069todmt.TR069Connector;
@@ -35,10 +40,11 @@ import org.osgi.service.tr069todmt.TR069Exception;
 public class TR069ConnectorTR069BoolToDmtTestCase extends TR069ToDmtTestBase {
 
 
+	@BeforeEach
 	public void setUp() throws Exception {
 		super.setUp();
 		factory = getService(TR069ConnectorFactory.class);
-		assertNotNull("Unable to get the TR069ConnectorFactory.", factory);
+		assertThat(factory).as("Unable to get the TR069ConnectorFactory.").isNotNull();
 	}
 
 	/**
@@ -54,6 +60,7 @@ public class TR069ConnectorTR069BoolToDmtTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testTR069BoolToDmtWithSingleFormat() throws Exception {
 
 		// register a plugin that has nodes for each format
@@ -95,14 +102,14 @@ public class TR069ConnectorTR069BoolToDmtTestCase extends TR069ToDmtTestBase {
 	private void checkTR069BooleanToDmtBoolean( String input, boolean expected ) throws Exception {
 		connector.setParameterValue(SINGLETON + "." + BOOLEAN, input, TR069Connector.TR069_BOOLEAN );
 		DmtData data = session.getNodeValue(SINGLETON + "/" + BOOLEAN);
-		assertEquals( "Wrong boolean value found in Dmt for value: " + input, expected, data.getBoolean());
-		assertEquals( DmtData.FORMAT_BOOLEAN, data.getFormat());
+		assertThat(data.getBoolean()).as("Wrong boolean value found in Dmt for value: " + input).isEqualTo(expected);
+		assertThat(data.getFormat()).isEqualTo(DmtData.FORMAT_BOOLEAN);
 	}
 	private void checkTR069BooleanToDmtString( String input, String expected ) throws Exception {
 		connector.setParameterValue(SINGLETON + "." + STRING, input, TR069Connector.TR069_BOOLEAN );
 		DmtData data = session.getNodeValue(SINGLETON + "/" + STRING);
-		assertEquals( "Wrong String value found in Dmt for value: " + input, expected, data.getString());
-		assertEquals( DmtData.FORMAT_STRING, data.getFormat());
+		assertThat(data.getString()).as("Wrong String value found in Dmt for value: " + input).isEqualTo(expected);
+		assertThat(data.getFormat()).isEqualTo(DmtData.FORMAT_STRING);
 	}
 	
 	/**
@@ -120,6 +127,7 @@ public class TR069ConnectorTR069BoolToDmtTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testTR069BoolToDmtWithoutFormats() throws Exception {
 		// register a plugin that has nodes without associated metadata, i.e. no declared formats
 		prepareTestNodeWithoutFormats();
@@ -147,8 +155,8 @@ public class TR069ConnectorTR069BoolToDmtTestCase extends TR069ToDmtTestBase {
 	private void checkTR069BooleanToDmtUnknown( String input, boolean expected ) throws Exception {
 		connector.setParameterValue(SINGLETON + "." + UNKNOWN, input, TR069Connector.TR069_BOOLEAN );
 		DmtData data = session.getNodeValue(SINGLETON + "/" + UNKNOWN);
-		assertEquals( "Wrong boolean value found in Dmt for value: " + input, expected, data.getBoolean());
-		assertEquals( DmtData.FORMAT_BOOLEAN, data.getFormat());
+		assertThat(data.getBoolean()).as("Wrong boolean value found in Dmt for value: " + input).isEqualTo(expected);
+		assertThat(data.getFormat()).isEqualTo(DmtData.FORMAT_BOOLEAN);
 	}
 
 	/**
@@ -163,6 +171,7 @@ public class TR069ConnectorTR069BoolToDmtTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testTR069BoolToDmtWithMultipleFormats() throws Exception {
 		// register a plugin that has nodes with the given OR-ed formats
 		prepareTestNodeWithFormats(ALL_DMT_FORMATS);
@@ -193,7 +202,7 @@ public class TR069ConnectorTR069BoolToDmtTestCase extends TR069ToDmtTestBase {
 			connector.setParameterValue(SINGLETON + "." + node, value, type );
 			fail("This conversion must not be possible because it can not be parsed as Boolean");
 		} catch (TR069Exception e) {
-			assertEquals( "An invalid value in setParameterValue must cause a TR069Exception.INVALID_PARAMETER_VALUE", TR069Exception.INVALID_PARAMETER_VALUE, e.getFaultCode() );
+			assertThat(e.getFaultCode()).as("An invalid value in setParameterValue must cause a TR069Exception.INVALID_PARAMETER_VALUE").isEqualTo(TR069Exception.INVALID_PARAMETER_VALUE);
 		}
 	}
 
@@ -203,7 +212,7 @@ public class TR069ConnectorTR069BoolToDmtTestCase extends TR069ToDmtTestBase {
 				connector.setParameterValue(SINGLETON + "." + node, "true", TR069Connector.TR069_BOOLEAN);
 				fail("Conversions to formats that are not listed in the nodes MetaData must not be possible.");
 			} catch (TR069Exception e) {
-				assertTrue( "Conversions to formats that are not listed in the nodes MetaData must not be possible.", e.getFaultCode() >= 9001 && e.getFaultCode() <= 9007 );
+				assertThat(e.getFaultCode() >= 9001 && e.getFaultCode() <= 9007).as("Conversions to formats that are not listed in the nodes MetaData must not be possible.").isTrue();
 			}
 		}
 	}

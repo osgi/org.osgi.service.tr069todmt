@@ -17,9 +17,12 @@
  *******************************************************************************/
 package org.osgi.test.cases.tr069todmt.junit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import org.junit.jupiter.api.Test;
 import org.osgi.service.dmt.DmtData;
 import org.osgi.service.dmt.DmtSession;
 import org.osgi.service.dmt.spi.DataPlugin;
@@ -43,20 +46,21 @@ public class TR069ConnectorSessionsTestCase extends TR069ToDmtTestBase {
 	 * It is expected that the method returns null and might throw an Exception.
 	 * @throws Exception
 	 */
+	@Test
 	public void testFactoryWithNullSession() throws Exception {
 		factory = getService(TR069ConnectorFactory.class);
-		assertNotNull(factory);
-		assertNull(connector);
+		assertThat(factory).isNotNull();
+		assertThat(connector).isNull();
 		try {
 			connector = factory.create(null); 
 		} catch (Throwable e) {
-			pass("A null session is not allowed as parameter for theTR069ConnectorFactory.create(..).");
+			System.out.println("A null session is not allowed as parameter for theTR069ConnectorFactory.create(..).");
 		}
 		finally {
 			if ( connector != null )
 				connector.close();
 		}
-		assertNull("A null session must not be allowed as parameter for theTR069ConnectorFactory.create(..).", connector);
+		assertThat(connector).as("A null session must not be allowed as parameter for theTR069ConnectorFactory.create(..).").isNull();
 	}
 	
 	/**
@@ -64,21 +68,22 @@ public class TR069ConnectorSessionsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testSessionWhenConnectorClosed() throws Exception {
 		factory = getService(TR069ConnectorFactory.class);
-		assertNotNull(factory);
-		assertNull(connector);
+		assertThat(factory).isNotNull();
+		assertThat(connector).isNull();
 		
 		session = dmtAdmin.getSession(".");
-		assertNotNull(session);
-		assertEquals( DmtSession.STATE_OPEN, session.getState() );
+		assertThat(session).isNotNull();
+		assertThat(session.getState()).isEqualTo(DmtSession.STATE_OPEN);
 		
 		connector = factory.create(session);
-		assertNotNull(connector);
-		assertEquals( DmtSession.STATE_OPEN, session.getState() );
+		assertThat(connector).isNotNull();
+		assertThat(session.getState()).isEqualTo(DmtSession.STATE_OPEN);
 		
 		connector.close();
-		assertEquals( "The DmtSession must not be closed, if the connector closes.", DmtSession.STATE_OPEN, session.getState() );
+		assertThat(session.getState()).as("The DmtSession must not be closed, if the connector closes.").isEqualTo(DmtSession.STATE_OPEN);
 	}
 
 	/**
@@ -88,10 +93,11 @@ public class TR069ConnectorSessionsTestCase extends TR069ToDmtTestBase {
 	 * and all connectors use the same session root for the URI mapping. 
 	 * @throws Exception
 	 */
+	@Test
 	public void testConnectorsOnSameSession() throws Exception {
 		factory = getService(TR069ConnectorFactory.class);
-		assertNotNull(factory);
-		assertNull(connector);
+		assertThat(factory).isNotNull();
+		assertThat(connector).isNull();
 
 		// setup a simple Plugin structure and register the plugin
 		Node root = new Node(null, "mapped plugin root", false, null, null );
@@ -107,19 +113,19 @@ public class TR069ConnectorSessionsTestCase extends TR069ToDmtTestBase {
 		
 		String sessionRoot = "./" + TR_069 + "/A";
 		session = dmtAdmin.getSession(sessionRoot);
-		assertNotNull(session);
-		assertEquals(sessionRoot, session.getRootUri());
-		assertEquals( DmtSession.STATE_OPEN, session.getState() );
+		assertThat(session).isNotNull();
+		assertThat(session.getRootUri()).isEqualTo(sessionRoot);
+		assertThat(session.getState()).isEqualTo(DmtSession.STATE_OPEN);
 		
 		TR069Connector[] connectors = new TR069Connector[10];
 		for (int i = 0; i < connectors.length; i++) {
 			connectors[i] = factory.create(session);
-			assertNotNull(connectors[i]);
-			String uri = connectors[i].toURI("B.C.", false); 
-			assertTrue( uri.equals("B/C"));
+			assertThat(connectors[i]).isNotNull();
+			String uri = connectors[i].toURI("B.C.", false);
+			assertThat(uri).isEqualTo("B/C");
 		}
 		
-		assertEquals( DmtSession.STATE_OPEN, session.getState() );
+		assertThat(session.getState()).isEqualTo(DmtSession.STATE_OPEN);
 		for (TR069Connector c : connectors)
 			c.close();
 	}

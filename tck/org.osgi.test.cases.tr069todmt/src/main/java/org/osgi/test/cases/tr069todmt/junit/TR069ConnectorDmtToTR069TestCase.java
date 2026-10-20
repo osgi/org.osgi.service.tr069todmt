@@ -17,11 +17,15 @@
  *******************************************************************************/
 package org.osgi.test.cases.tr069todmt.junit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.osgi.service.dmt.DmtData;
 import org.osgi.service.dmt.spi.DataPlugin;
 import org.osgi.service.tr069todmt.ParameterValue;
@@ -50,10 +54,11 @@ public class TR069ConnectorDmtToTR069TestCase extends TR069ToDmtTestBase {
 	};    
 
 
+	@BeforeEach
 	public void setUp() throws Exception {
 		super.setUp();
 		factory = getService(TR069ConnectorFactory.class);
-		assertNotNull("Unable to get the TR069ConnectorFactory.", factory);
+		assertThat(factory).as("Unable to get the TR069ConnectorFactory.").isNotNull();
 	}
 
 	
@@ -62,6 +67,7 @@ public class TR069ConnectorDmtToTR069TestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testDmtNumbersToTR069() throws Exception {
 		String expected = "123";
 		Node rootNode = new Node(null, "mapped plugin root", false, null, null );
@@ -129,6 +135,7 @@ public class TR069ConnectorDmtToTR069TestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testDmtBinaryToTR069() throws Exception {
 		byte[] bytes = new byte[] {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
 		Node rootNode = new Node(null, "mapped plugin root", false, null, null );
@@ -193,6 +200,7 @@ public class TR069ConnectorDmtToTR069TestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testDmtStringToTR069String() throws Exception {
 		String expected = "This is the expected teststring."; 
 		Node rootNode = new Node(null, "mapped plugin root", false, null, null );
@@ -242,6 +250,7 @@ public class TR069ConnectorDmtToTR069TestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testDmtBooleanToTR069() throws Exception {
 		Node rootNode = new Node(null, "mapped plugin root", false, null, null );
 		
@@ -281,6 +290,7 @@ public class TR069ConnectorDmtToTR069TestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testDmtNullToTR069() throws Exception {
 		Node rootNode = new Node(null, "mapped plugin root", false, null, null );
 		
@@ -316,6 +326,7 @@ public class TR069ConnectorDmtToTR069TestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testDmtXMLToTR069() throws Exception {
 		String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><rss></rss>"; 
 		Node rootNode = new Node(null, "mapped plugin root", false, null, null );
@@ -357,9 +368,9 @@ public class TR069ConnectorDmtToTR069TestCase extends TR069ToDmtTestBase {
 	 * @param expectedType .. the expected type
 	 */
 	private void assertValue( ParameterValue value, String expectedValue, int expectedType ) {
-		assertNotNull(value);
-		assertEquals( expectedType, value.getType() );
-		assertEquals( expectedValue, value.getValue() );
+		assertThat(value).isNotNull();
+		assertThat(value.getType()).isEqualTo(expectedType);
+		assertThat(value.getValue()).isEqualTo(expectedValue);
 	}
 
 	/**
@@ -384,7 +395,7 @@ public class TR069ConnectorDmtToTR069TestCase extends TR069ToDmtTestBase {
 	 * @param mimetype .. the mimetype to set in the MetaNode
 	 */
 	private void assertValueWithInvalidMimetype( Node node, String mimetype ) {
-		log("Testing of invalid mime-types is disabled until decision for bug 2209 is made." );
+		System.out.println("Testing of invalid mime-types is disabled until decision for bug 2209 is made.");
 //		MetaNode mn = new MetaNode(true, MetaNode.PERMANENT, node.getValue().getFormat(), new int[] {MetaNode.CMD_GET});
 //		mn.setMimeTypes(new String[] { mimetype } );
 //		node.setMetaNode(mn);

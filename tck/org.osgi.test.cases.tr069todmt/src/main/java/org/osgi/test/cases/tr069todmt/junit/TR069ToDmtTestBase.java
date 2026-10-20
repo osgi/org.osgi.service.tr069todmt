@@ -17,12 +17,17 @@
  *******************************************************************************/
 package org.osgi.test.cases.tr069todmt.junit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.osgi.service.dmt.DmtAdmin;
 import org.osgi.service.dmt.DmtConstants;
 import org.osgi.service.dmt.DmtData;
@@ -34,7 +39,6 @@ import org.osgi.service.tr069todmt.TR069ConnectorFactory;
 import org.osgi.test.cases.tr069todmt.plugins.MetaNode;
 import org.osgi.test.cases.tr069todmt.plugins.Node;
 import org.osgi.test.cases.tr069todmt.plugins.TestDataPlugin;
-import org.osgi.test.support.compatibility.DefaultTestBundleControl;
 
 /**
  *
@@ -46,7 +50,7 @@ import org.osgi.test.support.compatibility.DefaultTestBundleControl;
  * @author steffen.druesedow@telekom.de
  *
  */
-public abstract class TR069ToDmtTestBase extends DefaultTestBundleControl {
+public abstract class TR069ToDmtTestBase extends TR069TestSupport {
 
 	final static String ROOT = "./testplugin";
 	final String TR_069 	= "TR-069";
@@ -83,14 +87,14 @@ public abstract class TR069ToDmtTestBase extends DefaultTestBundleControl {
 	TR069ConnectorFactory factory;
 	TR069Connector connector;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	public void setUp() throws Exception {
 		System.out.println("setting up");
 		dmtAdmin = getService(DmtAdmin.class);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	public void tearDown() throws Exception {
 		System.out.println("tearing down");
 
 		if (session != null && session.getState() == DmtSession.STATE_OPEN)
@@ -234,10 +238,10 @@ public abstract class TR069ToDmtTestBase extends DefaultTestBundleControl {
 			String[] children = session.getChildNodeNames(nodeUri);
 			for (String child : children) {
 				String id = "" + session.getNodeValue(nodeUri + "/" + child + "/InstanceId" ).getLong();
-				assertFalse( "There must be no list/map- entry with this InstanceId: " + instanceId,  instanceId.equals(id));
+				assertThat(instanceId.equals(id)).as("There must be no list/map- entry with this InstanceId: " + instanceId).isFalse();
 			}
 		} catch (DmtException e) {
-			fail( "Unexpected DmtException while checking for a child with InstanceId = " + instanceId + " on list/map: " + nodeUri);
+			fail("Unexpected DmtException while checking for a child with InstanceId = " + instanceId + " on list/map: " + nodeUri);
 		}
 	}
 
@@ -261,7 +265,7 @@ public abstract class TR069ToDmtTestBase extends DefaultTestBundleControl {
 			String newChildUri = null;
 			for (String child : children) {
 				String instanceIdUri = nodeUri + "/" + child + "/InstanceId";
-				assertTrue( "The InstanceId node must exist at uri: " + instanceIdUri, session.isNodeUri(instanceIdUri));
+				assertThat(session.isNodeUri(instanceIdUri)).as("The InstanceId node must exist at uri: " + instanceIdUri).isTrue();
 				String id = "" + session.getNodeValue( instanceIdUri ).getLong();
 				if ( instanceId.equals(id)) {
 					newChildUri = nodeUri + "/" + child;
@@ -269,13 +273,13 @@ public abstract class TR069ToDmtTestBase extends DefaultTestBundleControl {
 					break;
 				}
 			}
-			assertNotNull( "No child of list/map at " + nodeUri + " found with an InstanceId of: " + instanceId, newChildUri );
+			assertThat(newChildUri).as("No child of list/map at " + nodeUri + " found with an InstanceId of: " + instanceId).isNotNull();
 			if ( nameValue != null )
-				assertEquals( "The child node must have a leaf 'name' with value : " + nameValue, nameValue, session.getNodeValue(newChildUri + "/name").toString() );
+				assertThat(session.getNodeValue(newChildUri + "/name").toString()).as("The child node must have a leaf 'name' with value : " + nameValue).isEqualTo(nameValue);
 			if ( descriptionValue != null )
-				assertEquals( "The child node must have a leaf 'description' with value : " + descriptionValue, descriptionValue, session.getNodeValue(newChildUri + "/description").toString() );
+				assertThat(session.getNodeValue(newChildUri + "/description").toString()).as("The child node must have a leaf 'description' with value : " + descriptionValue).isEqualTo(descriptionValue);
 		} catch (DmtException e) {
-			fail( "Unexpected DmtException while checking for a child with InstanceId = " + instanceId + " on list/map: " + nodeUri);
+			fail("Unexpected DmtException while checking for a child with InstanceId = " + instanceId + " on list/map: " + nodeUri);
 		}
 		return key;
 	}
@@ -293,9 +297,9 @@ public abstract class TR069ToDmtTestBase extends DefaultTestBundleControl {
 			String[] children = session.getChildNodeNames(nodeUri);
 			for (String child : children)
 				instanceIds.add("" + session.getNodeValue(nodeUri + "/" + child + "/InstanceId" ).getLong());
-			assertEquals("There are duplicate InstanceIds for list/map: " + nodeUri, children.length, instanceIds.size());
+			assertThat(instanceIds.size()).as("There are duplicate InstanceIds for list/map: " + nodeUri).isEqualTo(children.length);
 		} catch (DmtException e) {
-			fail( "Unexpected DmtException while checking InstanceIds on list/map " + nodeUri);
+			fail("Unexpected DmtException while checking InstanceIds on list/map " + nodeUri);
 		}
 	}
 
@@ -311,11 +315,11 @@ public abstract class TR069ToDmtTestBase extends DefaultTestBundleControl {
 	 */
 	void assertMapNodeExists(String nodeUri, String alias, String nameValue, String descriptionValue ) throws Exception {
 		String uri = nodeUri + "/" + alias;
-		assertTrue("The node must exist in the DMT: " + uri, session.isNodeUri(uri));
+		assertThat(session.isNodeUri(uri)).as("The node must exist in the DMT: " + uri).isTrue();
 		if ( nameValue != null )
-			assertEquals( "The node must have a leaf 'name' with value : " + nameValue, nameValue, session.getNodeValue(uri + "/name").toString() );
+			assertThat(session.getNodeValue(uri + "/name").toString()).as("The node must have a leaf 'name' with value : " + nameValue).isEqualTo(nameValue);
 		if ( descriptionValue != null )
-			assertEquals( "The node must have a leaf 'description' with value : " + descriptionValue, descriptionValue, session.getNodeValue(uri + "/description").toString() );
+			assertThat(session.getNodeValue(uri + "/description").toString()).as("The node must have a leaf 'description' with value : " + descriptionValue).isEqualTo(descriptionValue);
 	}
 
 	/**
@@ -326,7 +330,7 @@ public abstract class TR069ToDmtTestBase extends DefaultTestBundleControl {
 	 */
 	void assertMapNodeNotExists(String nodeUri, String alias) throws Exception {
 		String uri = nodeUri + "/" + alias;
-		assertFalse("The node must not exist in the DMT: " + uri, session.isNodeUri(uri));
+		assertThat(session.isNodeUri(uri)).as("The node must not exist in the DMT: " + uri).isFalse();
 	}
 	
 	

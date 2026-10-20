@@ -17,6 +17,9 @@
  *******************************************************************************/
 package org.osgi.test.cases.tr069todmt.junit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,6 +29,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.osgi.service.dmt.DmtConstants;
 import org.osgi.service.dmt.DmtData;
 import org.osgi.service.dmt.DmtException;
@@ -55,10 +60,11 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	
 	// a closed session must un-associate the connector --> How to test un-association?
 
+	@BeforeEach
 	public void setUp() throws Exception {
 		super.setUp();
 		factory = getService(TR069ConnectorFactory.class);
-		assertNotNull("Unable to get the TR069ConnectorFactory.", factory);
+		assertThat(factory).as("Unable to get the TR069ConnectorFactory.").isNotNull();
 	}
 	
 	
@@ -68,6 +74,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddObjectInNonAtomicSession() throws Exception {
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
 		
@@ -81,9 +88,9 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			// get name for a new object on this list
 			connector.addObject(LISTNODE + ".");
 			
-			fail( "addObject must not be possible in non-atomic session" );
+			fail("addObject must not be possible in non-atomic session");
 		} catch (TR069Exception e) {
-			pass( "addObject is not possible in non-atomic session: " + e.getMessage() );
+			System.out.println("addObject is not possible in non-atomic session: " + e.getMessage());
 		}
 	}
 	
@@ -110,6 +117,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddObjectToListInLazyMode() throws Exception {
 		String nameValue = "name of new node";
 		String descrValue = "description of new node";
@@ -137,10 +145,10 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			assertUniqueInstanceIds(LISTNODE);
 			
 		} catch (DmtException e) {
-			fail( "unexpected DMTException during test execution: " + e.getMessage() );
+			fail("unexpected DMTException during test execution: " + e.getMessage());
 		}
 		catch (TR069Exception e) {
-			fail( "unexpected TR069Exception during test execution: " + e.getMessage() );
+			fail("unexpected TR069Exception during test execution: " + e.getMessage());
 		}
 	}
 
@@ -155,6 +163,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * No Alias is used for this test. 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddObjectToMapInLazyMode() throws Exception {
 		String nameValue = "name of new node";
 		String descrValue = "description of new node";
@@ -180,10 +189,10 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			assertUniqueInstanceIds(LISTNODE);
 			
 		} catch (DmtException e) {
-			fail( "unexpected DMTException during test execution: " + e.getMessage() );
+			fail("unexpected DMTException during test execution: " + e.getMessage());
 		}
 		catch (TR069Exception e) {
-			fail( "unexpected TR069Exception during test execution: " + e.getMessage() );
+			fail("unexpected TR069Exception during test execution: " + e.getMessage());
 		}
 	}
 	
@@ -200,6 +209,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddObjectWithAliasToMapInLazyMode() throws Exception {
 		String alias = "aliasKey";
 		String nameValue = "name of new node";
@@ -214,10 +224,10 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			connector = factory.create(session);
 			// add object with Alias
 			String newName = connector.addObject(MAPNODE + ".[" + alias + "].");
-			assertEquals("AddObject must return the given Alias as new name.", alias, newName );
+			assertThat(newName).as("AddObject must return the given Alias as new name.").isEqualTo(alias);
 			
 			// no node with such an alias must exist at this point
-			assertFalse(session.isNodeUri(MAPNODE + "/" + newName));
+			assertThat(session.isNodeUri(MAPNODE + "/" + newName)).isFalse();
 			
 			// trigger creation of newNode by setting parameter values
 			connector.setParameterValue(MAPNODE + "." + newName + ".name" , "name of new node", TR069Connector.TR069_STRING );
@@ -232,10 +242,10 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			assertUniqueInstanceIds( MAPNODE );
 			
 		} catch (DmtException e) {
-			fail( "unexpected DMTException during test execution: " + e.getMessage() );
+			fail("unexpected DMTException during test execution: " + e.getMessage());
 		}
 		catch (TR069Exception e) {
-			fail( "unexpected TR069Exception during test execution: " + e.getMessage() );
+			fail("unexpected TR069Exception during test execution: " + e.getMessage());
 		}
 	}
 
@@ -249,6 +259,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * No Alias is used for this test. 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddObjectToMapInEagerMode() throws Exception {
 		String nameValue = "name of new node";
 		String descrValue = "description of new node";
@@ -261,7 +272,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			// associate a new connector with the session on "./testplugin"
 			connector = factory.create(session);
 			String newName = connector.addObject(MAPNODE + ".");
-			assertTrue( "The new node must be created immediately in the DMT: " + MAPNODE + "/" + newName, session.isNodeUri(MAPNODE + "/" + newName ) );
+			assertThat(session.isNodeUri(MAPNODE + "/" + newName )).as("The new node must be created immediately in the DMT: " + MAPNODE + "/" + newName).isTrue();
 
 			// trigger creation of newNode by setting parameter values
 			connector.setParameterValue(MAPNODE + "." + newName + ".name" , "name of new node", TR069Connector.TR069_STRING );
@@ -272,10 +283,10 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			assertUniqueInstanceIds(MAPNODE);
 
 		} catch (DmtException e) {
-			fail( "unexpected DMTException during test execution: " + e.getMessage() );
+			fail("unexpected DMTException during test execution: " + e.getMessage());
 		}
 		catch (TR069Exception e) {
-			fail( "unexpected TR069Exception during test execution: " + e.getMessage() );
+			fail("unexpected TR069Exception during test execution: " + e.getMessage());
 		}
 	}
 	
@@ -289,6 +300,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddObjectWithAliasToMapInEagerMode() throws Exception {
 		String alias = "aliasKey";
 		String nameValue = "name of new node";
@@ -303,8 +315,8 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			connector = factory.create(session);
 			// add object with Alias
 			String newName = connector.addObject(MAPNODE + ".[" + alias + "].");
-			assertEquals("AddObject must return the given Alias as new name.", alias, newName );
-			assertTrue( "The new node must be created immediately in the DMT.", session.isNodeUri(MAPNODE + "/" + newName ) );
+			assertThat(newName).as("AddObject must return the given Alias as new name.").isEqualTo(alias);
+			assertThat(session.isNodeUri(MAPNODE + "/" + newName )).as("The new node must be created immediately in the DMT.").isTrue();
 
 			// set parameter values
 			connector.setParameterValue(MAPNODE + "." + newName + ".name" , "name of new node", TR069Connector.TR069_STRING );
@@ -314,10 +326,10 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			assertUniqueInstanceIds(MAPNODE);
 
 		} catch (DmtException e) {
-			fail( "unexpected DMTException during test execution: " + e.getMessage() );
+			fail("unexpected DMTException during test execution: " + e.getMessage());
 		}
 		catch (TR069Exception e) {
-			fail( "unexpected TR069Exception during test execution: " + e.getMessage() );
+			fail("unexpected TR069Exception during test execution: " + e.getMessage());
 		}
 	}
 	
@@ -327,6 +339,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddObjectOnInvalidPathes() throws Exception {
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
 		
@@ -336,29 +349,29 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 
 		try {
 			connector.addObject(SINGLETON + ".newObject.");
-			fail( "addObject() must throw a TR069Exception.");
+			fail("addObject() must throw a TR069Exception.");
 		} catch (TR069Exception e) {
-			pass( "addObject() correctly throws a TR069Exception.");
+			System.out.println("addObject() correctly throws a TR069Exception.");
 		}
 
 		try {
 			connector.addObject(SINGLETON + ".newParameter");
-			fail( "addObject() must throw a TR069Exception.");
+			fail("addObject() must throw a TR069Exception.");
 		} catch (TR069Exception e) {
-			pass( "addObject() correctly throws a TR069Exception.");
+			System.out.println("addObject() correctly throws a TR069Exception.");
 		}
 		try {
 			connector.addObject(MAPNODE   + ".100.newParameter");
-			fail( "addObject() must throw a TR069Exception.");
+			fail("addObject() must throw a TR069Exception.");
 		} catch (TR069Exception e) {
-			pass( "addObject() correctly throws a TR069Exception.");
+			System.out.println("addObject() correctly throws a TR069Exception.");
 		}
 
 		try {
 			connector.addObject(LISTNODE  + ".100.newParameter");
-			fail( "addObject() must throw a TR069Exception.");
+			fail("addObject() must throw a TR069Exception.");
 		} catch (TR069Exception e) {
-			pass( "addObject() correctly throws a TR069Exception.");
+			System.out.println("addObject() correctly throws a TR069Exception.");
 		}
 
 		// test absolute path
@@ -366,7 +379,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			connector.addObject(ROOT + "." + MAPNODE + "[aliaskey].");
 			fail("addObject() must not accept an absolute path.");
 		} catch (TR069Exception e) {
-			pass("addObject() does not accept an absolute path.");
+			System.out.println("addObject() does not accept an absolute path.");
 		}
 	}
 	/************************ deleteObject() tests ****************************/
@@ -377,6 +390,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * fault code. 
 	 * According to BUG-discussion 2202 this is done in an atomic session.
 	 */
+	@Test
 	public void testDeleteObject() throws Exception {
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
 		
@@ -402,18 +416,18 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 		// check that missing nodes are ignored and don't cause an exception
 		try {
 			connector.deleteObject(MAPNODE + "." + missingInstance );
-			pass( "Missing nodes are correctly ignored in 'deleteObject()'; " + MAPNODE + "." + missingInstance);
+			System.out.println("Missing nodes are correctly ignored in 'deleteObject()'; " + MAPNODE + "." + missingInstance);
 		} catch (Exception e) {
-			fail( "Missing nodes must not cause an exception in 'deleteObject()': " + MAPNODE + "." + missingInstance);
+			fail("Missing nodes must not cause an exception in 'deleteObject()': " + MAPNODE + "." + missingInstance);
 		}
 		
 		// try to delete an Object that is not part of a table (singleton object)
 		try {
 			connector.deleteObject(SINGLETON + "." );
-			fail( "It must not be possible to delete singleton objects: " + SINGLETON + ".");
+			fail("It must not be possible to delete singleton objects: " + SINGLETON + ".");
 		} catch (TR069Exception e) {
-			pass( "Calling 'deleteObject()' on singleton correctly throws a TR069Exception: " + SINGLETON + ".");
-			assertEquals( "The expected fault code is " + 9005, 9005, e.getFaultCode() );
+			System.out.println("Calling 'deleteObject()' on singleton correctly throws a TR069Exception: " + SINGLETON + ".");
+			assertThat(e.getFaultCode()).as("The expected fault code is " + 9005).isEqualTo(9005);
 		}
 		
 		// try to delete parameters of LIST and MAP entries or singleton objects
@@ -423,11 +437,11 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			connector.deleteObject(MAPNODE + ".100.name");
 			connector.deleteObject(LISTNODE + ".100.name");
 			connector.deleteObject(SINGLETON + ".name");
-			fail( "It must not be possible to delete Parameters of list/map or singleton nodes.");
+			fail("It must not be possible to delete Parameters of list/map or singleton nodes.");
 		} catch (TR069Exception e) {
-			pass( "Calling 'deleteObject()' on a parameter correctly throws a TR069Exception");
+			System.out.println("Calling 'deleteObject()' on a parameter correctly throws a TR069Exception");
 			List<Integer> expectedFaultCodes = Arrays.asList(new Integer[] {9001, 9002, 9003, 9005});
-			assertTrue(expectedFaultCodes.contains( e.getFaultCode()) );
+			assertThat(expectedFaultCodes.contains( e.getFaultCode())).isTrue();
 		}
 
 		// test absolute path
@@ -435,7 +449,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			connector.deleteObject(ROOT + "." + LISTNODE + ".100");
 			fail("deleteObject() must not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
 		} catch (TR069Exception e) {
-			pass("deleteObject() does not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
+			System.out.println("deleteObject() does not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
 		}
 	}
 
@@ -468,6 +482,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testGetParameterNamesResults() throws Exception {
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
 		
@@ -480,15 +495,15 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 		// only the parameter itself must be returned
 		try {
 			infos = connector.getParameterNames(SINGLETON + ".name", false);
-			assertNotNull(infos);
-			assertEquals(1, infos.size());
+			assertThat(infos).isNotNull();
+			assertThat(infos).hasSize(1);
 			ParameterInfo info = infos.iterator().next();
-			assertEquals(SINGLETON + ".name", info.getPath());
-			assertTrue(info.isParameter());
+			assertThat(info.getPath()).isEqualTo(SINGLETON + ".name");
+			assertThat(info.isParameter()).isTrue();
 			// check that the value is of expected type and content
 			ParameterValue value = info.getParameterValue();
-			assertEquals("plainname", value.getValue());
-			assertEquals(TR069Connector.TR069_STRING, value.getType());
+			assertThat(value.getValue()).isEqualTo("plainname");
+			assertThat(value.getType()).isEqualTo(TR069Connector.TR069_STRING);
 		} catch (TR069Exception e) {
 			fail("Unexpected TR069Exception in GetParameterNames on a parameter with nextLevel=false.");
 		}
@@ -534,6 +549,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testGetParameterNamesCreatesMissingNodes() throws Exception {
 		String newInstanceId = "111";
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
@@ -565,6 +581,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testGetParameterNamesOnInvalidPathes() throws Exception {
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
 		
@@ -577,10 +594,9 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 		// invocation on a parameter with nextLevel = true
 		try {
 			infos = connector.getParameterNames(SINGLETON + ".name", true);
-			fail( "GetParameterNames on a parameter with nextLevel=true must throw an InvalidArgument exception (9003).");
+			fail("GetParameterNames on a parameter with nextLevel=true must throw an InvalidArgument exception (9003).");
 		} catch (TR069Exception e) {
-			assertEquals("GetParameterNames on a parameter with nextLevel=true must throw an InvalidArgument exception (9003).", 
-					TR069Exception.INVALID_ARGUMENTS, e.getFaultCode());
+			assertThat(e.getFaultCode()).as("GetParameterNames on a parameter with nextLevel=true must throw an InvalidArgument exception (9003).").isEqualTo(TR069Exception.INVALID_ARGUMENTS);
 		}
 
 		try {
@@ -588,9 +604,9 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			connector.getParameterNames(LISTNODE + ".0", false);
 			connector.getParameterNames(MAPNODE + ".0", true);
 			connector.getParameterNames(MAPNODE + ".0", false);
-			fail( "GetParameterNames on an instance id must throw an InvalidArgument exception (9003).");
+			fail("GetParameterNames on an instance id must throw an InvalidArgument exception (9003).");
 		} catch (TR069Exception e) {
-			pass( "GetParameterNames on an instance id must throw an InvalidArgument exception (9003).");
+			System.out.println("GetParameterNames on an instance id must throw an InvalidArgument exception (9003).");
 		}
 		
 		// test absolute path
@@ -598,7 +614,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			connector.getParameterValue(ROOT + "." + SINGLETON + ".name");
 			fail("getParameterValue() must not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
 		} catch (TR069Exception e) {
-			pass("getParameterValue() does not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
+			System.out.println("getParameterValue() does not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
 		}
 	}
 	
@@ -614,6 +630,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testGetParameterValueCreatesMissingNodes() throws Exception {
 		String root = "./testplugin";
 		String newInstanceId = "111";
@@ -648,6 +665,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testGetParameterValueOnSyntheticNodes() throws Exception {
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
 		
@@ -658,25 +676,25 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 		// get Alias for Map entry
 		String key = assertInstanceIdNodeExists(MAPNODE, "100", null, null );
 		ParameterValue value = connector.getParameterValue(MAPNODE + ".100.Alias");
-		assertEquals( TR069Connector.TR069_STRING, value.getType());
-		assertEquals( key, value.getValue());
+		assertThat(value.getType()).isEqualTo(TR069Connector.TR069_STRING);
+		assertThat(value.getValue()).isEqualTo(key);
 		
 		// get Alias for List entry
 		key = assertInstanceIdNodeExists(LISTNODE, "100", null, null );
 		value = connector.getParameterValue(LISTNODE + ".100.Alias");
-		assertEquals( TR069Connector.TR069_STRING, value.getType());
-		assertEquals(key, value.getValue());
+		assertThat(value.getType()).isEqualTo(TR069Connector.TR069_STRING);
+		assertThat(value.getValue()).isEqualTo(key);
 		
 		// check number of entries
 		String expected = "" + session.getChildNodeNames(MAPNODE).length;
 		value = connector.getParameterValue(MAPNODE + "NumberOfEntries");
-		assertEquals( expected, value.getValue() );
-		assertEquals( TR069Connector.TR069_UNSIGNED_INT, value.getType());
+		assertThat(value.getValue()).isEqualTo(expected);
+		assertThat(value.getType()).isEqualTo(TR069Connector.TR069_UNSIGNED_INT);
 		
 		expected = "" + session.getChildNodeNames(LISTNODE).length;
 		value = connector.getParameterValue(LISTNODE + "NumberOfEntries");
-		assertEquals( expected, value.getValue() );
-		assertEquals( TR069Connector.TR069_UNSIGNED_INT, value.getType());
+		assertThat(value.getValue()).isEqualTo(expected);
+		assertThat(value.getType()).isEqualTo(TR069Connector.TR069_UNSIGNED_INT);
 		
 	}
 	
@@ -687,6 +705,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testGetParameterValueOnInvalidPathes() throws Exception {
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
 		
@@ -706,11 +725,11 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			// inexistent
 			connector.getParameterValue(SINGLETON + ".inexistentParameter");
 
-			fail( "GetParameterValue on an object nodes must throw a TR069Exception.");
+			fail("GetParameterValue on an object nodes must throw a TR069Exception.");
 		} catch (TR069Exception e) {
-			pass( "GetParameterValue on an object nodes correctly throws a TR069Exception.");
+			System.out.println("GetParameterValue on an object nodes correctly throws a TR069Exception.");
 			List<Integer> expectedFaultCodes = Arrays.asList(new Integer[] {9001, 9002, 9003, 9005});
-			assertTrue(expectedFaultCodes.contains( e.getFaultCode()) );
+			assertThat(expectedFaultCodes.contains( e.getFaultCode())).isTrue();
 		}
 		
 		// test absolute path
@@ -718,7 +737,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			connector.getParameterValue(ROOT + "." + SINGLETON + ".name");
 			fail("getParameterValue() must not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
 		} catch (TR069Exception e) {
-			pass("getParameterValue() does not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
+			System.out.println("getParameterValue() does not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
 		}
 	}
 
@@ -734,6 +753,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testSetParameterValueCreatesMissingNodes() throws Exception {
 		String newInstanceId = "111";
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
@@ -761,6 +781,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testSetParameterValueOnInvalidPathes() throws Exception {
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
 		
@@ -780,11 +801,11 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			// inexistent parameter
 			connector.setParameterValue(SINGLETON + ".inexistentParameter", "newName", TR069Connector.TR069_STRING);
 
-			fail( "setParameterValue on an object or an inexistent parameter throw a TR069Exception.");
+			fail("setParameterValue on an object or an inexistent parameter throw a TR069Exception.");
 		} catch (TR069Exception e) {
-			pass( "setParameterValue on an object or an inexistent parameter correctly throws a TR069Exception.");
+			System.out.println("setParameterValue on an object or an inexistent parameter correctly throws a TR069Exception.");
 			List<Integer> expectedFaultCodes = Arrays.asList(new Integer[] {9001, 9002, 9003, 9003, 9005, 9006, 9007, 9008 });
-			assertTrue(expectedFaultCodes.contains( e.getFaultCode()) );
+			assertThat(expectedFaultCodes.contains( e.getFaultCode())).isTrue();
 		}
 
 		// test absolute path
@@ -792,7 +813,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			connector.setParameterValue(ROOT + "." + SINGLETON + ".name", "newName", TR069Connector.TR069_STRING);
 			fail("SetParameterValue() must not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
 		} catch (TR069Exception e) {
-			pass("SetParameterValue() does not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
+			System.out.println("SetParameterValue() does not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
 		}
 	}
 
@@ -804,6 +825,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testSetParameterValue() throws Exception {
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
 		
@@ -826,12 +848,12 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 		assertInstanceIdNodeExists(LISTNODE, "100", "newNameValue", "newDescriptionValue");
 		
 		// check initial value of the default plugins Singleton parameters
-		assertEquals(session.getNodeValue(SINGLETON + "/name" ).toString(), "plainname");
-		assertEquals(session.getNodeValue(SINGLETON + "/description" ).toString(), "plaindescription");
+		assertThat("plainname").isEqualTo(session.getNodeValue(SINGLETON + "/name" ).toString());
+		assertThat("plaindescription").isEqualTo(session.getNodeValue(SINGLETON + "/description" ).toString());
 		connector.setParameterValue(SINGLETON + ".name", "newNameValue", TR069Connector.TR069_STRING );
 		connector.setParameterValue(SINGLETON + ".description", "newDescriptionValue", TR069Connector.TR069_STRING );
-		assertEquals(session.getNodeValue(SINGLETON + "/name" ).toString(), "newNameValue");
-		assertEquals(session.getNodeValue(SINGLETON + "/description" ).toString(), "newDescriptionValue");
+		assertThat("newNameValue").isEqualTo(session.getNodeValue(SINGLETON + "/name" ).toString());
+		assertThat("newDescriptionValue").isEqualTo(session.getNodeValue(SINGLETON + "/description" ).toString());
 	}
 
 	
@@ -845,6 +867,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * According to BUG-discussion 2202 this is done in an atomic session.
 	 * @throws Exception
 	 */
+	@Test
 	public void testSetParameterValueOnMapAlias() throws Exception {
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
 		
@@ -863,13 +886,13 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 		// re-read children and check that new Alias maps to the same id as before
 		String[] newChildren = session.getChildNodeNames(MAPNODE);
 		// the number of children must not have changed
-		assertEquals(newChildren.length, children.length);
+		assertThat(children.length).isEqualTo(newChildren.length);
 		for (String newChild : newChildren) {
 			String id = "" + session.getNodeValue( MAPNODE + "/" + newChild + "/InstanceId").getLong();
-			assertEquals(mapping.get(newChild), id);
+			assertThat(id).isEqualTo(mapping.get(newChild));
 			mapping.remove(newChild);
 		}
-		assertEquals(0, mapping.size());
+		assertThat(mapping.size()).isEqualTo(0);
 	}
 
 	
@@ -884,6 +907,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testSetParameterValueOnNonWritableNode() throws Exception {
 		// setup a simple plugin with a singleton that has 2 params
 		// both params are read-only (via MetaData restrictions)
@@ -908,10 +932,9 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 
 		try {
 			connector.setParameterValue(SINGLETON + ".name", "newNameValue", TR069Connector.TR069_STRING );
-			fail( "setParameterValue on a non-writable parameter must throw a TR069Exception with fault code: " + TR069Exception.NON_WRITABLE_PARAMETER);
+			fail("setParameterValue on a non-writable parameter must throw a TR069Exception with fault code: " + TR069Exception.NON_WRITABLE_PARAMETER);
 		} catch (TR069Exception e) {
-			assertEquals( "setParameterValue on a non-writable parameter correctly throws a TR069Exception with fault code: " + TR069Exception.NON_WRITABLE_PARAMETER,
-					TR069Exception.NON_WRITABLE_PARAMETER, e.getFaultCode());
+			assertThat(e.getFaultCode()).as("setParameterValue on a non-writable parameter correctly throws a TR069Exception with fault code: " + TR069Exception.NON_WRITABLE_PARAMETER).isEqualTo(TR069Exception.NON_WRITABLE_PARAMETER);
 		}
 	}
 	
@@ -925,6 +948,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testSetParameterValueOnNonExistingParameter() throws Exception {
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
 
@@ -934,10 +958,9 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 
 		try {
 			connector.setParameterValue(SINGLETON + ".nonexistingParam", "newValue", TR069Connector.TR069_STRING );
-			assertFalse( "The connector must only create missing instances of Map or List nodes on the fly.", session.isNodeUri(SINGLETON + "/nonexistingParam"));
+			assertThat(session.isNodeUri(SINGLETON + "/nonexistingParam")).as("The connector must only create missing instances of Map or List nodes on the fly.").isFalse();
 		} catch (TR069Exception e) {
-			assertEquals( "setParameterValue on a non-existing object parameter correctly throws a TR069Exception with fault code: " + TR069Exception.INVALID_PARAMETER_NAME,
-					TR069Exception.INVALID_PARAMETER_NAME, e.getFaultCode());
+			assertThat(e.getFaultCode()).as("setParameterValue on a non-existing object parameter correctly throws a TR069Exception with fault code: " + TR069Exception.INVALID_PARAMETER_NAME).isEqualTo(TR069Exception.INVALID_PARAMETER_NAME);
 		}
 	}
 	
@@ -949,6 +972,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * The connector assumes that each parameter or object path is relative to the root of the Dmt Session.
 	 * <<<
 	 */
+	@Test
 	public void testToUriAssumesRelativePathes() throws Exception {
 		// register simple plugin with one list, one map and a singleton object
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
@@ -961,8 +985,8 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 		String uri = null;
 		try {
 			uri = connector.toURI(SINGLETON + ".", false);
-			assertFalse("The resulting uri must be relative to the DmtSession: " + uri, uri.startsWith(ROOT));
-			assertEquals(SINGLETON, uri);
+			assertThat(uri).as("The resulting uri must be relative to the DmtSession: " + uri).doesNotStartWith(ROOT);
+			assertThat(uri).isEqualTo(SINGLETON);
 		} catch (TR069Exception e) {
 			fail("ToUri() must accept relative path '" + SINGLETON + ".' on session root: " + ROOT + " without an Exception");
 		}
@@ -973,7 +997,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			uri = connector.toURI(ROOT + "." + SINGLETON + ".", false);
 			fail("ToUri() must not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
 		} catch (TR069Exception e) {
-			pass("ToUri() does not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
+			System.out.println("ToUri() does not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
 		}
 	}
 	
@@ -987,6 +1011,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception 
 	 */
+	@Test
 	public void testToUriForSimpleCases() throws Exception {
 		// register simple plugin with one list, one map and a singleton object
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
@@ -1022,6 +1047,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testToUriForSyntheticNodes() throws Exception {
 		// register simple plugin with one list, one map and a singleton object
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
@@ -1034,30 +1060,27 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 		String path = MAPNODE + ".100.Alias";
 		try {
 			connector.toURI(path, false);
-			fail( "Mapping the synthetic Alias parameter must throw a TR069Exception.INVALID_PARAMETER_NAME for path: " + path );
+			fail("Mapping the synthetic Alias parameter must throw a TR069Exception.INVALID_PARAMETER_NAME for path: " + path);
 		} catch (TR069Exception e) {
-			assertEquals( "Mapping the synthetic Alias parameter must throw a TR069Exception.INVALID_PARAMETER_NAME for path: " + path,
-					TR069Exception.INVALID_PARAMETER_NAME, e.getFaultCode());
+			assertThat(e.getFaultCode()).as("Mapping the synthetic Alias parameter must throw a TR069Exception.INVALID_PARAMETER_NAME for path: " + path).isEqualTo(TR069Exception.INVALID_PARAMETER_NAME);
 		}
 
 		// try to map a NumberOfEntries parameter on a Map
 		path = MAPNODE + "NumberOfEntries";
 		try {
 			connector.toURI(path, false);
-			fail( "Mapping a synthetic NumberOfEntries parameter must throw a TR069Exception.INVALID_PARAMETER_NAME for path: " + path );
+			fail("Mapping a synthetic NumberOfEntries parameter must throw a TR069Exception.INVALID_PARAMETER_NAME for path: " + path);
 		} catch (TR069Exception e) {
-			assertEquals( "Mapping a synthetic NumberOfEntries parameter must throw a TR069Exception.INVALID_PARAMETER_NAME for path: " + path,
-					TR069Exception.INVALID_PARAMETER_NAME, e.getFaultCode());
+			assertThat(e.getFaultCode()).as("Mapping a synthetic NumberOfEntries parameter must throw a TR069Exception.INVALID_PARAMETER_NAME for path: " + path).isEqualTo(TR069Exception.INVALID_PARAMETER_NAME);
 		}
 
 		// try to map a NumberOfEntries parameter on a List
 		path = LISTNODE + "NumberOfEntries";
 		try {
 			connector.toURI(path, false);
-			fail( "Mapping a synthetic NumberOfEntries parameter must throw a TR069Exception.INVALID_PARAMETER_NAME for path: " + path );
+			fail("Mapping a synthetic NumberOfEntries parameter must throw a TR069Exception.INVALID_PARAMETER_NAME for path: " + path);
 		} catch (TR069Exception e) {
-			assertEquals( "Mapping a synthetic NumberOfEntries parameter must throw a TR069Exception.INVALID_PARAMETER_NAME for path: " + path,
-					TR069Exception.INVALID_PARAMETER_NAME, e.getFaultCode());
+			assertThat(e.getFaultCode()).as("Mapping a synthetic NumberOfEntries parameter must throw a TR069Exception.INVALID_PARAMETER_NAME for path: " + path).isEqualTo(TR069Exception.INVALID_PARAMETER_NAME);
 		}
 	}
 
@@ -1068,6 +1091,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * According to BUG-discussion 2202 this is done in an atomic session.
 	 * @throws Exception
 	 */
+	@Test
 	public void testToUriCreatesMissingNodes() throws Exception {
 		String newInstanceId = "111";
 		String newAlias = "newalias";
@@ -1080,7 +1104,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 		// no node with such an instanceId must exist at this point
 		assertInstanceIdNodeNotExists(MAPNODE, newInstanceId);
 		String uri = connector.toURI(MAPNODE + "." + newInstanceId + ".name", true);
-		assertTrue(session.isNodeUri(uri));
+		assertThat(session.isNodeUri(uri)).isTrue();
 		
 		// do the same sequence for a list node
 		// no node with such an instanceId must exist at this point
@@ -1092,7 +1116,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 		// test creation of a map entry that is addressed through an Alias
 		assertMapNodeNotExists(MAPNODE, newAlias);
 		uri = connector.toURI(MAPNODE + ".[" + newAlias + "].name", true);
-		assertTrue(session.isNodeUri(uri));
+		assertThat(session.isNodeUri(uri)).isTrue();
 		assertMapNodeExists(MAPNODE, newAlias, null, null);
 	}
 
@@ -1102,6 +1126,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testToUriOnInvalidPathes() throws Exception {
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
 		
@@ -1125,11 +1150,11 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			connector.toURI(MAPNODE + ".100.inexistentParam", false);
 			connector.toURI(LISTNODE + ".100.inexistentParam", false);
 
-			fail( "toUri() on invalid path must throw a TR069Exception.");
+			fail("toUri() on invalid path must throw a TR069Exception.");
 		} catch (TR069Exception e) {
-			pass( "toUri() on invalid path throws a TR069Exception.");
+			System.out.println("toUri() on invalid path throws a TR069Exception.");
 			List<Integer> expectedFaultCodes = Arrays.asList(new Integer[] {9001, 9002, 9003, 9003, 9005, 9006, 9007, 9008 });
-			assertTrue(expectedFaultCodes.contains( e.getFaultCode()) );
+			assertThat(expectedFaultCodes.contains( e.getFaultCode())).isTrue();
 		}
 
 		// test absolute path
@@ -1137,7 +1162,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			connector.setParameterValue(ROOT + "." + SINGLETON + ".name", "newName", TR069Connector.TR069_STRING);
 			fail("SetParameterValue() must not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
 		} catch (TR069Exception e) {
-			pass("SetParameterValue() does not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
+			System.out.println("SetParameterValue() does not accept an absolute path '" + ROOT + "." + SINGLETON + ".' on session root: " + ROOT);
 		}
 	}
 
@@ -1149,6 +1174,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * The connector assumes that each parameter or object path is relative to the root of the Dmt Session.
 	 * <<<
 	 */
+	@Test
 	public void testToPathAssumesRelativePathes() throws Exception {
 		// register simple plugin with one list, one map and a singleton object
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
@@ -1161,8 +1187,8 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 		String path = null;
 		try {
 			path = connector.toPath(SINGLETON);
-			assertFalse("The resulting path must be relative to the DmtSession: " + path, path.startsWith("."));
-			assertEquals(SINGLETON + ".", path);
+			assertThat(path).as("The resulting path must be relative to the DmtSession: " + path).doesNotStartWith(".");
+			assertThat(path).isEqualTo(SINGLETON + ".");
 		} catch (TR069Exception e) {
 			fail("ToPath() must accept relative path '" + SINGLETON + "' on session root: " + ROOT + " without an Exception");
 		}
@@ -1173,7 +1199,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			path = connector.toPath(ROOT + "/" + SINGLETON);
 			fail("ToPath() must not accept an absolute path '" + ROOT + "/" + SINGLETON + "' on session root: " + ROOT);
 		} catch (TR069Exception e) {
-			pass("ToPath() does not accept an absolute path '" + ROOT + "/" + SINGLETON + "' on session root: " + ROOT);
+			System.out.println("ToPath() does not accept an absolute path '" + ROOT + "/" + SINGLETON + "' on session root: " + ROOT);
 		}
 	}
 	
@@ -1187,6 +1213,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	 * 
 	 * @throws Exception 
 	 */
+	@Test
 	public void testToPathForSimpleCases() throws Exception {
 		// register simple plugin with one list, one map and a singleton object
 		registerDefaultTestPlugin(ROOT, false);	// don't set "eager" mime-type
@@ -1218,7 +1245,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	private void assertNumberOfEntries(String uri, String prefix) throws DmtException {
 		String type = session.getNodeType(uri);
 		Collection<ParameterInfo> infos = connector.getParameterNames("", true);
-		assertNotNull("Missing parameter names for: " + session.getRootUri(), infos);
+		assertThat(infos).as("Missing parameter names for: " + session.getRootUri()).isNotNull();
 		String paramNumberOfEntries = prefix + "NumberOfEntries";
 		boolean numberOfEntriesExist = false;
 		for (ParameterInfo paramInfo : infos) {
@@ -1228,7 +1255,7 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 			}
 		}
 		boolean checkNumberOfEntries = DmtConstants.DDF_MAP.equals(type) || DmtConstants.DDF_LIST.equals(type);
-		assertEquals(paramNumberOfEntries + " is incorrectly supported.", checkNumberOfEntries, numberOfEntriesExist);
+		assertThat(numberOfEntriesExist).as(paramNumberOfEntries + " is incorrectly supported.").isEqualTo(checkNumberOfEntries);
 	}
 	
 	/**
@@ -1242,15 +1269,15 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 		try {
 			List<String> unexpected = new ArrayList<String>();
 			Collection<ParameterInfo> infos = connector.getParameterNames(path, nextLevel);
-			assertNotNull(infos);
-			assertEquals(expected.size(), infos.size());
+			assertThat(infos).isNotNull();
+			assertThat(infos).hasSize(expected.size());
 			for (ParameterInfo info : infos) {
 				if ( ! expected.contains(info.getPath() ))
 					unexpected.add(info.getPath());
 				expected.remove(info.getPath());
 			}
-			assertEquals("There are unexpected results in the returned ParameterNames: " + unexpected, 0, unexpected.size());
-			assertEquals("Expected results are missing in the returned ParameterNames: " + expected, 0, expected.size());
+			assertThat(unexpected).as("There are unexpected results in the returned ParameterNames: " + unexpected).isEmpty();
+			assertThat(expected).as("Expected results are missing in the returned ParameterNames: " + expected).isEmpty();
 		} catch (TR069Exception e) {
 			fail("Unexpected TR069Exception in GetParameterNames on path '"+path+"' with nextLevel="+nextLevel+".");
 		}
@@ -1315,11 +1342,11 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	private void assertFriendlyToUri( String path, String expected ) {
 		try {
 			String uri = connector.toURI(path, false);
-			assertNotNull(uri);
-			assertFalse( "ToUri() must not return an absolute uri: " + uri, uri.startsWith("."));
-			assertEquals( expected, uri );
+			assertThat(uri).isNotNull();
+			assertThat(uri).as("ToUri() must not return an absolute uri: " + uri).doesNotStartWith(".");
+			assertThat(uri).isEqualTo(expected);
 		} catch (TR069Exception e) {
-			fail( "Unexpected TR069Exception in toUri() for parameter: " + path );
+			fail("Unexpected TR069Exception in toUri() for parameter: " + path);
 		}
 	}
 
@@ -1332,11 +1359,11 @@ public class TR069ConnectorOperationsTestCase extends TR069ToDmtTestBase {
 	private void assertFriendlyToPath( String uri, String expected ) {
 		try {
 			String path = connector.toPath(uri);
-			assertNotNull(path);
-			assertFalse( "ToPath() must not return an absolute uri: " + path, path.startsWith("."));
-			assertEquals( expected, path );
+			assertThat(path).isNotNull();
+			assertThat(path).as("ToPath() must not return an absolute uri: " + path).doesNotStartWith(".");
+			assertThat(path).isEqualTo(expected);
 		} catch (TR069Exception e) {
-			fail( "Unexpected TR069Exception in toPath() for parameter: " + uri );
+			fail("Unexpected TR069Exception in toPath() for parameter: " + uri);
 		}
 	}
 }
