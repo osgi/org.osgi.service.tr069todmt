@@ -18,7 +18,7 @@
 		<org.eclipse.equinox.event.version>1.7.300</org.eclipse.equinox.event.version>
 		<org.eclipse.osgi.version>3.18.100</org.eclipse.osgi.version>
 		<org.osgi.framework.version>1.10.0</org.osgi.framework.version>
-		<org.osgi.service.cm.version>1.6.0</org.osgi.service.cm.version>
+		<org.osgi.service.cm.version>1.6.1</org.osgi.service.cm.version>
 		<org.osgi.service.component.version>1.5.1</org.osgi.service.component.version>
 		<!-- reference implementation of org.osgi.service.dmt (org.osgi.tck) -->
 		<org.osgi.service.dmt.tck.version>2.0.3-SNAPSHOT</org.osgi.service.dmt.tck.version>
